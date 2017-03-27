@@ -1,0 +1,63 @@
+// ANIMATIONS
+.fade-enter-active {
+  transition: all .2s ease;
+}
+.fade-leave-active {
+  transition: all .2s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.fade-in-enter-active {
+  transition: all .2s ease;
+}
+
+.fade-in-enter {
+  opacity: 0;
+}
+
+.slide-right-enter-active {
+  transition: all .3s ease;
+}
+.slide-right-leave-active {
+  transition: all .3s ease;
+}
+.slide-right-enter, .slide-right-leave-to {
+  transform: translateX(-10px);
+  opacity: 0;
+}
+
+.slide-left-enter-active {
+  transition: all .3s ease;
+}
+.slide-left-leave-active {
+  transition: all .3s ease;
+}
+.slide-left-enter, .slide-left-leave-to {
+  transform: translateX(50%);
+  opacity: 0;
+}
+
+.slide-down-enter-active {
+  transition: all .1s ease;
+}
+.slide-down-leave-active {
+  transition: all .1s ease;
+}
+.slide-down-enter, .slide-down-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}
+
+.next-page-enter, .next-page-leave-to {
+  opacity: 0;
+}
+.next-page-leave-active {
+  position: absolute;
+  opacity: 0;
+  transition: opacity 0s ease-in;
+}
+.next-page-enter-active {
+  transition: opacity 0.5s ease-out;
+}

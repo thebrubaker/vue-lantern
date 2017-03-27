@@ -1,0 +1,136 @@
+@import 'variables';
+
+@mixin flex-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin input-field {
+  border-radius: 0;
+  box-shadow: none;
+  border-color: #d2d6de;
+  display: block;
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.42857143;
+  color: #555;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #ccc;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+
+  .icon-before & {
+    padding: 6px 12px 6px 48px;
+  }
+
+  .icon-after & {
+    padding: 6px 36px 6px 12px;
+  }
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: none;
+    outline: 0;
+  }
+}
+
+@mixin input-icon {
+  @include icon;
+  color: rgb(171, 171, 171);
+  position: absolute;
+  line-height: 34px;
+
+  .icon-after & {
+    top: 0;
+    right: 10px;
+  }
+
+  .icon-before & {
+    top: 0;
+    left: 10px;
+  }
+}
+
+@mixin icon {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
+
+@mixin grid {
+  display: flex;
+  flex-direction: column;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+@mixin table {
+  width: 100%;
+  overflow: auto;
+  font-size: 0.9em;
+  margin: 20px 0;
+  display: table;
+  border-collapse: collapse;
+  position: relative;
+
+  &__header {
+    display: table-row;
+    transition: background-color 0.1s ease-out;
+    border-bottom: 1px solid gray;
+    text-decoration: none;
+    background-color: transparent;
+    color: $base-color;
+    font-weight: 600;
+    height: 30px;
+
+    & .table__cell {
+      overflow-x: visible;
+    }
+  }
+
+  &__row {
+    display: table-row;
+    background-color: transparent;
+    padding: 10px;
+    border-bottom: 1px solid lightgray;
+    transition: background-color 0.1s ease-out;
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      background-color: rgba(0,0,0,0.05);
+      transition: background-color 0.1s ease-out;
+    }
+  }
+
+  &__cell {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 10px 5px;
+    white-space: nowrap;
+    max-width: 200px;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+
+    &.link {
+      text-decoration: none;
+      color: $primary-color;
+    }
+  }
+}
