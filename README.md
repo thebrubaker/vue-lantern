@@ -1,4 +1,4 @@
-# admin
+# Vue Lantern
 
 > A Vue.js project
 
