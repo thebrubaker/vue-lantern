@@ -19,7 +19,7 @@ export default class SearchService {
       case 'laravel':
         this.selected_driver = this.drivers.laravel
         break
-      default: error(`The driver you selected is not support: ${config('search.driver')}`, 'Search')
+      default: error(`The driver you selected is not supported: ${config('search.driver')}`, 'Search')
     }
   }
 
