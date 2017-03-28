@@ -12,7 +12,11 @@ export default class AlgoliaSearch {
    */
   constructor (config) {
     this.config = config
-    this.algolia = algolia(config.drivers.algolia.id, config.drivers.algolia.key)
+    try {
+      this.algolia = algolia(config.drivers.algolia.id, config.drivers.algolia.key)
+    } catch (exception) {
+      error(exception.message, exception.name)
+    }
   }
 
   /**
