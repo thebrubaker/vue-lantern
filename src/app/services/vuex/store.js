@@ -1,7 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import bootstrap from './bootstrap'
-import Cache from './Cache'
+import Cache from './cache'
 
 Vue.use(Vuex)
 

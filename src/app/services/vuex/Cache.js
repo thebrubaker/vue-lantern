@@ -28,6 +28,7 @@ export default class Cache {
     key === null
       ? window.localStorage.setItem(this.key, JSON.stringify(this.value))
       : window.localStorage.setItem(key, JSON.stringify(value))
+    
     return this
   }
 
