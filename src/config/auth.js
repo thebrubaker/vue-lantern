@@ -3,6 +3,16 @@ export default {
   'login_route': '/login',
 
   /**
+   * The namespace of the user object in the data store
+   */
+  'user_namespace': 'auth/user',
+
+  /**
+   * The namespace of the guard object in the data store
+   */
+  'guard_namespace': 'auth/guard',
+
+  /**
    * The driver used for authentication.
    * @type {String}
    */
@@ -31,7 +41,6 @@ export default {
      * @type {Object}
      */
     laravel: {
-      auth_url: env('LARAVEL_AUTH_URL'),
       client_id: env('LARAVEL_AUTH_CLIENT_ID'),
       client_secret: env('LARAVEL_AUTH_CLIENT_SECRET'),
       grant_type: env('LARAVEL_AUTH_GRANT_TYPE'),

@@ -1,4 +1,4 @@
-import Auth from 'services/auth/auth'
+import firebase from 'firebase'
 
 /**
  * These services are booted during app initialization.
@@ -7,7 +7,7 @@ import Auth from 'services/auth/auth'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    return new Auth(container, config('auth'))
+    return firebase.initializeApp(config('firebase'))
   })
 }
 
