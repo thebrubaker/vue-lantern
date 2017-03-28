@@ -1,4 +1,5 @@
 import Events from 'services/pubsub/events'
+import eventList from 'bootstrap/events'
 
 /**
  * These services are booted during app initialization.
@@ -18,7 +19,7 @@ function boot (key, app) {
  * @return {undefined}
  */
 function register (app) {
-
+  app.events.register(eventList)
 }
 
 export default { boot, register }

@@ -7,7 +7,7 @@ export default {
    * Force the Vuex store into strict mode. In strict mode any mutations
    * to Vuex state outside of mutation handlers will throw an Error.
    */
-  strict: env('APP_ENV') !== 'production',
+  strict: env('APP_DEBUG', true),
 
   /**
    * Actions for the store service.

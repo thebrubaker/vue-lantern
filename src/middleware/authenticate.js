@@ -7,7 +7,7 @@ export default {
       }
 
       // Redirect to `/login` if not authenticated
-      if (!app.auth.authenticated() && to.path !== '/login') {
+      if (!app.auth.authenticated() && to.path !== config('auth.login_route')) {
         return next('login')
       }
 

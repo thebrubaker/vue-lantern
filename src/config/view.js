@@ -18,16 +18,13 @@ export default {
   /**
    * Configure whether to allow vue-devtools inspection.
    */
-  devtools: env('APP_DEBUG', false),
+  devtools: env('APP_DEBUG', true),
 
   /**
    * Plugins to be registered with the view service.
    * @type {array}
    */
-  plugins: [
-    require('vuex'),
-    require('vue-router')
-  ],
+  plugins: [],
 
   /**
    * Global components for the view service.

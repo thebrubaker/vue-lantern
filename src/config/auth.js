@@ -1,5 +1,7 @@
 export default {
 
+  'login_route': '/login',
+
   /**
    * The driver used for authentication.
    * @type {String}

@@ -10,10 +10,14 @@ export default {
    * @type {object}
    */
   drivers: {
+
+    // Algolia driver config
     algolia: {
       id: env('ALGOLIA_ID'),
       key: env('ALGOLIA_KEY')
     },
+
+    // Laravel driver config
     laravel: {}
   }
 }

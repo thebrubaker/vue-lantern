@@ -34,12 +34,12 @@ export default class Lantern {
       this.config.providers[key].default.boot(key, this)
     })
 
-    Object.keys(this.config.providers).forEach(key => {
-      this.config.providers[key].default.register(this)
-    })
-
     this.config.aliases.forEach(key => {
       this[key] = this.bottle.container[key]
+    })
+
+    Object.keys(this.config.providers).forEach(key => {
+      this.config.providers[key].default.register(this)
     })
   }
 

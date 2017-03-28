@@ -3,5 +3,5 @@ export default {
    * [immediateExceptions description]
    * @type {[type]}
    */
-  immediateExceptions: env('APP_DEBUG', false)
+  immediateExceptions: env('APP_DEBUG', true)
 }
