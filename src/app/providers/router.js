@@ -5,8 +5,8 @@ import Router from 'services/vue-router/router'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (app) {
-  app.bind('router', function (container) {
+function boot (key, app) {
+  app.bind(key, function (container) {
     return new Router(config('router'))
   })
 }

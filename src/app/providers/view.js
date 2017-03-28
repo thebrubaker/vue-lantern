@@ -5,8 +5,8 @@ import View from 'services/vue/view'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (app) {
-  app.bind('view', function (container) {
+function boot (key, app) {
+  app.bind(key, function (container) {
     return new View(container, config('view'))
   })
 }

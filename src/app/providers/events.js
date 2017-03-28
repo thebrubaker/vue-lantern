@@ -5,8 +5,8 @@ import Events from 'services/pubsub/events'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (app) {
-  app.bind('events', function (container) {
+function boot (key, app) {
+  app.bind(key, function (container) {
     return new Events(config('events'))
   })
 }

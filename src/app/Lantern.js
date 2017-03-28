@@ -30,12 +30,12 @@ export default class Lantern {
    * @return {undefined}
    */
   boot () {
-    this.config.providers.forEach(provider => {
-      provider.default.boot(this)
+    Object.keys(this.config.providers).forEach(key => {
+      this.config.providers[key].default.boot(key, this)
     })
 
-    this.config.providers.forEach(provider => {
-      provider.default.register(this)
+    Object.keys(this.config.providers).forEach(key => {
+      this.config.providers[key].default.register(this)
     })
 
     this.config.aliases.forEach(key => {

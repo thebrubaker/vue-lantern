@@ -2,7 +2,7 @@
  * An implementation of the API service. This service handles
  * all requests to and responses from the configured API.
  */
-export default class ApiService {
+export default class LaravelApiService {
 
   /**
    * The constructor for the API service.

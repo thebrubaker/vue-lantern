@@ -11,8 +11,9 @@ export default {
    */
   drivers: {
     algolia: {
-      id: '8AELELJX2T',
-      key: '26fa89af6ca06859ad1e1d52fb0c972b'
-    }
+      id: env('ALGOLIA_ID'),
+      key: env('ALGOLIA_KEY')
+    },
+    laravel: {}
   }
 }

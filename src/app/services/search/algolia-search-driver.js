@@ -1,10 +1,10 @@
-import algoliasearch from 'algoliasearch'
+import algolia from 'algoliasearch'
 
 /**
  * An implementation of the Search service using Algolia. This service handles
  * sending requests to search indices and returning results.
  */
-export default class AlgoliaSearchService {
+export default class AlgoliaSearch {
   /**
    * Configure the algolia search service.
    * @param  {object} config The configuration for algolia.
@@ -12,19 +12,28 @@ export default class AlgoliaSearchService {
    */
   constructor (config) {
     this.config = config
-    this.service = algoliasearch(config.id, config.key)
+    this.algolia = algolia(config.drivers.algolia.id, config.drivers.algolia.key)
   }
 
   /**
    * Send a search query to Algolia.
-   * @param  {string} query The query to be searched.
-   * @param  {array} config The indices to be searched.
+   * @param  {string} index The index to be searched.
+   * @param  {string} query   The query to be searched.
+   * @param  {object} params  An object of configuration for the search.
    * @return {Promise} A promise that resolves with the response from Algolia.
    */
-  search (query, config) {
+  search (index, query, config = {}) {
+    return this.searchIndex(index, query, config)
+  }
+
+  /**
+   * Send a custom-configured search.
+   * @param  {object} config  Configuration for the search.
+   * @return {Promise} A promise that resolves with the response from Algolia.
+   */
+  custom (config) {
     return new Promise((resolve, reject) => {
-      let queries = this.prepareQuery(query, config)
-      this.service.search(queries, this.searchCallback.bind(this, resolve, reject))
+      this.algolia.search(config, this.searchCallback.bind(this, resolve, reject))
     })
   }
 
@@ -38,7 +47,7 @@ export default class AlgoliaSearchService {
   searchIndices (indices, query, params = {}) {
     return new Promise((resolve, reject) => {
       let queries = this.mapIndices(indices, query, params)
-      this.service.search(queries, this.searchCallback.bind(this, resolve, reject))
+      this.algolia.search(queries, this.searchCallback.bind(this, resolve, reject))
     })
   }
 
@@ -52,7 +61,7 @@ export default class AlgoliaSearchService {
   searchIndex (index, query, params = {}) {
     return new Promise((resolve, reject) => {
       params = this.prepareParams(params)
-      this.service.initIndex(index).search(query, params, this.searchCallback.bind(this, resolve, reject))
+      this.algolia.initIndex(index).search(query, params, this.searchCallback.bind(this, resolve, reject))
     })
   }
 

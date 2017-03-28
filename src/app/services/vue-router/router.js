@@ -7,7 +7,7 @@ Vue.use(Router)
  * An implementation of the Router service using VueRouter. This service handles
  * route management.
  */
-export default class VueRouter {
+export default class VueRouterService {
   /**
    * Constructs the router service.
    * @param  {object} config The configuration for the router.

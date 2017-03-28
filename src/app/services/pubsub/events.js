@@ -4,7 +4,7 @@ import pubsub from 'pubsub-js'
  * An implementation of the Events service using PubSub. This service handles
  * registering messages and subscribers to those messages.
  */
-export default class PubSubEvents {
+export default class PubSubEventsService {
 
   /**
    * Set PubSub as the event service.

@@ -1,7 +1,7 @@
 export default {
 
   // Base url for the API
-  baseURL: 'http://hammerhead.dev/api/v1',
+  baseURL: env('API_BASE_URL'),
 
   // Default results per page if pagination is requested
   perPage: 15,

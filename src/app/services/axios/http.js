@@ -4,7 +4,7 @@ import axios from 'axios'
  * An implementation of the HTTP service using Axios. This service handles
  * all HTTP requests and responses to the application.
  */
-export default class AxiosHttp {
+export default class AxiosHttpService {
 
   /**
    * Set axios as the http service and configure default http options.

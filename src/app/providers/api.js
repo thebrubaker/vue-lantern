@@ -1,11 +1,13 @@
+import Api from 'services/laravel/api'
+
 /**
  * These services are booted during app initialization.
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (app) {
-  app.bind('api', function (container) {
-    return {}
+function boot (key, app) {
+  app.bind(key, function (container) {
+    return new Api(container.http, config('api'))
   })
 }
 

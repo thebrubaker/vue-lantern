@@ -5,8 +5,8 @@ import Store from 'services/vuex/store'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (app) {
-  app.bind('store', function (container) {
+function boot (key, app) {
+  app.bind(key, function (container) {
     return new Store(config('store'))
   })
 }

@@ -6,7 +6,7 @@
  */
 module.exports = function env (key, fallback) {
   if (process.env[key] === undefined && fallback === undefined) {
-    return error('Env', `The environment variable you are trying to access does not exist: ${key}`)
+    return error(`The environment variable you are trying to access does not exist: ${key}`, 'Env')
   }
 
   if (process.env[key] === undefined) {

@@ -1,11 +1,13 @@
+import Auth from 'services/auth/auth'
+
 /**
  * These services are booted during app initialization.
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (app) {
-  app.bind('auth', function (container) {
-    return {}
+function boot (key, app) {
+  app.bind(key, function (container) {
+    return new Auth(container.http, container.store, config('auth'))
   })
 }
 

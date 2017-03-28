@@ -21,22 +21,22 @@ export default {
    * Registers all service providers for the application.
    * @type {Array}
    */
-  providers: [
+  providers: {
 
     // Application Service Providers
-    require('src/app/providers/api'),
-    require('src/app/providers/auth'),
-    require('src/app/providers/events'),
-    require('src/app/providers/http'),
-    require('src/app/providers/router'),
-    require('src/app/providers/search'),
-    require('src/app/providers/store'),
-    require('src/app/providers/view')
+    api: require('src/app/providers/api'),
+    auth: require('src/app/providers/auth'),
+    events: require('src/app/providers/events'),
+    http: require('src/app/providers/http'),
+    router: require('src/app/providers/router'),
+    search: require('src/app/providers/search'),
+    store: require('src/app/providers/store'),
+    view: require('src/app/providers/view')
 
-  ],
+  },
 
   /**
-   * Aliases to services that should be loaded into the application.
+   * Register aliases for the application. Each alias will access that service from the application container.
    * @type {array}
    */
   aliases: [
