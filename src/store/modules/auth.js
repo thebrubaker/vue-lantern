@@ -13,8 +13,7 @@ export default {
       namespaced: true,
       bootstrap: [
         'getters',
-        'mutations',
-        'reset'
+        'mutations'
       ],
       state: {
         name: '',
@@ -28,8 +27,7 @@ export default {
       namespaced: true,
       bootstrap: [
         'getters',
-        'mutations',
-        'reset'
+        'mutations'
       ],
       state: {
         token_type: '',

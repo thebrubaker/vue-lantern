@@ -56,8 +56,9 @@ export default class FirebaseAuth {
   logout () {
     return new Promise((resolve, reject) => {
       this.firebase.auth().signOut().then(() => {
-        this.store.dispatch('auth/guard/reset')
-        this.store.dispatch('auth/user/reset')
+        this.store.reset('auth/user/name').clearCache()
+        this.store.reset('auth/user/email').clearCache()
+        this.store.reset('auth/guard/access_token').clearCache()
         resolve()
       }).catch(response => {
         error(response.message, 'FirebaseAuth')
