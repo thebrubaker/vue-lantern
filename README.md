@@ -37,4 +37,5 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 - 0.4.0 Vue Cleanup
 - 0.5.0 Email / Username Example Login Page
 - 0.6.0 Final Check on Bugs
+- 0.7.0 Global Catch Block (Experimental)
 - 1.0.0 Released
