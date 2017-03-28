@@ -1,5 +1,6 @@
 import form from './bootstrapForm'
 import table from './bootstrapTable'
+import reset from './bootstrapReset'
 
 export function getters (module) {
   Object.keys(module.state).forEach(key => {
@@ -39,4 +40,4 @@ export function setDefaults (module) {
   }
 }
 
-export default { setDefaults, getters, mutations, form, table }
+export default { setDefaults, getters, mutations, form, table, reset }

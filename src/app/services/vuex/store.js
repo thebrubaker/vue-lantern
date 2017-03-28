@@ -13,10 +13,22 @@ export default class VuexStoreService {
    * @return {undefined}
    */
   constructor (config) {
-    bootstrapModules(config.modules)
-    this.vuex = new Vuex.Store(config)
+    bootstrapModules(config.store.modules)
+    this.vuex = new Vuex.Store(config.store)
     this.config = config
+    this.initialState = JSON.parse(JSON.stringify(this.vuex.state))
     this.bootCachedData()
+  }
+
+  /**
+   * Reset the state of the data store module to the initial state.
+   * @param  {string} namespace  The namespace of the module
+   * @return {undefined}
+   */
+  reset (namespace) {
+    this.commit(`${namespace}/reset`, namespace.split('/').reduce((carry, key) => {
+      return carry[key]
+    }, this.initialState))
   }
 
   /**
@@ -190,6 +202,10 @@ function bootstrapType (type, module) {
 
   if (type === 'mutations') {
     return bootstrap.mutations(module)
+  }
+
+  if (type === 'reset') {
+    return bootstrap.reset(module)
   }
 
   throw new Error('[Vuex Bootstrap] You are attempting to bootstrap a type that does not exist: ' + type)

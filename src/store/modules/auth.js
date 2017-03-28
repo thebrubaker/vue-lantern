@@ -13,7 +13,8 @@ export default {
       namespaced: true,
       bootstrap: [
         'getters',
-        'mutations'
+        'mutations',
+        'reset'
       ],
       state: {
         name: '',
@@ -21,36 +22,20 @@ export default {
         last_name: '',
         email: '',
         scopes: []
-      },
-      actions: {
-        reset ({ commit }) {
-          commit('name', '')
-          commit('first_name', '')
-          commit('last_name', '')
-          commit('email', '')
-          commit('scopes', [])
-        }
       }
     },
     guard: {
       namespaced: true,
       bootstrap: [
         'getters',
-        'mutations'
+        'mutations',
+        'reset'
       ],
       state: {
         token_type: '',
         expires_in: '',
         access_token: '',
         refresh_token: ''
-      },
-      actions: {
-        reset ({ commit }) {
-          commit('token_type', '')
-          commit('expires_in', '')
-          commit('access_token', '')
-          commit('refresh_token', '')
-        }
       }
     }
   }

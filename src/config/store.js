@@ -10,26 +10,32 @@ export default {
   strict: env('APP_DEBUG', true),
 
   /**
-   * Actions for the store service.
+   * Configuration for the data store.
    * @type {object}
    */
-  actions,
+  store: {
+    /**
+     * Actions for the store service.
+     * @type {object}
+     */
+    actions,
 
-  /**
-   * Getters for the store service.
-   * @type {object}
-   */
-  getters,
+    /**
+     * Getters for the store service.
+     * @type {object}
+     */
+    getters,
 
-  /**
-   * Modules for the store service.
-   * @type {object}
-   */
-  modules,
+    /**
+     * Modules for the store service.
+     * @type {object}
+     */
+    modules,
 
-  /**
-   * Plugins to be registered with the store service.
-   * @type {array}
-   */
-  plugins: []
+    /**
+     * Plugins to be registered with the store service.
+     * @type {array}
+     */
+    plugins: []
+  }
 }
