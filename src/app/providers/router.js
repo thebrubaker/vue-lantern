@@ -1,5 +1,6 @@
 import Router from 'services/vue-router/router'
 import directory from 'utilities/directory'
+import config from 'src/config/router'
 
 /**
  * These services are booted during app initialization.
@@ -8,7 +9,7 @@ import directory from 'utilities/directory'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    return new Router(config('router'))
+    return new Router(config)
   })
 }
 

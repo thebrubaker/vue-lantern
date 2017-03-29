@@ -1,5 +1,6 @@
 import Events from 'services/pubsub/events'
-import eventList from 'bootstrap/events'
+import directory from 'utilities/directory'
+import config from 'src/config/events'
 
 /**
  * These services are booted during app initialization.
@@ -8,7 +9,7 @@ import eventList from 'bootstrap/events'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    return new Events(config('events'))
+    return new Events(config)
   })
 }
 
@@ -19,7 +20,7 @@ function boot (key, app) {
  * @return {undefined}
  */
 function register (app) {
-  app.events.register(eventList)
+  app.events.register(app, directory('src/events'))
 }
 
 export default { boot, register }

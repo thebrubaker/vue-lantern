@@ -1,4 +1,5 @@
 import Search from 'services/search/search'
+import config from 'src/config/search'
 
 /**
  * These services are booted during app initialization.
@@ -7,7 +8,7 @@ import Search from 'services/search/search'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    let service = new Search(container, config('search'))
+    let service = new Search(container, config)
 
     // Let's pull out the search function from the service, so it's easy to use for basic search queries,
     // but we'll also alias the more in-depth methods for complicated search queries.

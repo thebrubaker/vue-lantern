@@ -1,4 +1,3 @@
-/* eslint valid-jsdoc: 1 */
 import Bottle from 'bottlejs'
 
 /**
@@ -27,7 +26,7 @@ export default class Lantern {
    * include a boot and register method that takes the application as it's only
    * argument.
    * @param  {Array} providers A list of providers to boot/register.
-   * @return {undefined}
+   * @return {Lantern}  The application
    */
   boot () {
     Object.keys(this.config.providers).forEach(key => {
@@ -41,6 +40,8 @@ export default class Lantern {
     Object.keys(this.config.providers).forEach(key => {
       this.config.providers[key].default.register(this)
     })
+
+    return this
   }
 
   /**

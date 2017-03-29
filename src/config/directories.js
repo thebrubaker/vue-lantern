@@ -5,6 +5,7 @@
 export default {
   'src/config': require.context('src/config', false, /\.js$/),
   'store/modules': require.context('store/modules', false, /\.js$/),
+  'models': require.context('models', false, /\.js$/),
   'routes/middleware': require.context('routes/middleware', false, /\.js$/),
   'src/events': require.context('src/events', false, /\.js$/)
 }

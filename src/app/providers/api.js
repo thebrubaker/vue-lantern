@@ -1,4 +1,5 @@
 import Api from 'services/laravel/api'
+import config from 'src/config/api'
 
 /**
  * These services are booted during app initialization.
@@ -7,7 +8,7 @@ import Api from 'services/laravel/api'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    return new Api(container.http, config('api'))
+    return new Api(container.http, config)
   })
 }
 

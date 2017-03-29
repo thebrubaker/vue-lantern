@@ -1,4 +1,5 @@
 import firebase from 'firebase'
+import config from 'src/config/firebase'
 
 /**
  * These services are booted during app initialization.
@@ -7,7 +8,7 @@ import firebase from 'firebase'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    return firebase.initializeApp(config('firebase'))
+    return firebase.initializeApp(config)
   })
 }
 

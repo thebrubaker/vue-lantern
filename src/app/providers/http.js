@@ -1,4 +1,5 @@
 import Http from 'services/axios/http'
+import config from 'src/config/http'
 
 /**
  * These services are booted during app initialization.
@@ -7,7 +8,7 @@ import Http from 'services/axios/http'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    return new Http(config('http'))
+    return new Http(config)
   })
 }
 

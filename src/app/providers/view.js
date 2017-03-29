@@ -1,4 +1,5 @@
 import View from 'services/vue/view'
+import config from 'src/config/view'
 
 /**
  * These services are booted during app initialization.
@@ -7,7 +8,7 @@ import View from 'services/vue/view'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    return new View(container, config('view'))
+    return new View(container, config)
   })
 }
 
@@ -18,7 +19,7 @@ function boot (key, app) {
  * @return {undefined}
  */
 function register (app) {
-  config('view.plugins').forEach(plugin => {
+  config.plugins.forEach(plugin => {
     app.view.use(plugin)
   })
 }

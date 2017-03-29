@@ -1,5 +1,5 @@
-import Auth from 'services/auth/auth'
-import config from 'src/config/auth'
+import ModelService from 'services/blueprint/model'
+import directory from 'utilities/directory'
 
 /**
  * These services are booted during app initialization.
@@ -8,7 +8,13 @@ import config from 'src/config/auth'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    return new Auth(container, config)
+    let service = new ModelService(app, directory('models'))
+
+    let model = namespace => service.load(namespace)
+    model.all = service.all.bind(service)
+    model.register = service.register.bind(service)
+
+    return model
   })
 }
 

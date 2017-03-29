@@ -1,4 +1,5 @@
 import Store from 'services/vuex/store'
+import config from 'src/config/store'
 
 /**
  * These services are booted during app initialization.
@@ -7,7 +8,7 @@ import Store from 'services/vuex/store'
  */
 function boot (key, app) {
   app.bind(key, function (container) {
-    return new Store(config('store'))
+    return new Store(config)
   })
 }
 

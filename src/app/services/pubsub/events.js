@@ -1,4 +1,5 @@
 import pubsub from 'pubsub-js'
+import { namespaceKeys } from 'utilities'
 
 /**
  * An implementation of the Events service using PubSub. This service handles
@@ -21,9 +22,11 @@ export default class PubSubEventsService {
    * @param  {Object} events An object with channels as keys.
    * @return {undefined}
    */
-  register (events) {
-    Object.keys(events).forEach(channel => {
-      this.registerChannel(events[channel])
+  register (app, channels) {
+    Object.keys(channels).map(key => {
+      return namespaceKeys(key, channels[key](app))
+    }).forEach(channel => {
+      this.registerChannel(channel)
     })
   }
 

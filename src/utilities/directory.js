@@ -5,7 +5,7 @@ import directories from 'src/config/directories'
  * @param  {string} directory  The name of the directory to import.
  * @return {object}
  */
-export default function directory (name) {
+export default function directory (name, shallow = true) {
   let directory = directories[name]
   if (directory === undefined) {
     return error(`The directory '${name}' is not valid. Did you forget to add it to 'src/config/directories'?`, 'Utilities')
@@ -23,7 +23,8 @@ export default function directory (name) {
  * @return {array} An array of filenames from the directory.
  */
 function getFilenames (directory) {
-  return directory.keys().map(key => key.match(/([^/]+)(?=\.\w+$)/)[0])
+  // return directory.keys().map(key => key.match(/([^/]+)(?=\.\w+$)/)[0])
+  return directory.keys().map(key => key.match(/\.\/(.*)\.\w+$/)[1])
 }
 
 /**

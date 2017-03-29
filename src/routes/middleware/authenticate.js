@@ -18,7 +18,7 @@ export default {
       }
 
       // If the user does not have the given access permissions, throw an error
-      if (!app.auth.routeGuard(to)) {
+      if (!auth.routeGuard(to)) {
         return next(false)
       }
 

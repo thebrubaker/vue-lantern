@@ -27,6 +27,7 @@ module.exports = {
       'bootstrap': resolve('src/bootstrap'),
       'drivers': resolve('src/app/drivers'),
       'layouts': resolve('src/resources/layouts'),
+      'models': resolve('src/models'),
       'pages': resolve('src/pages'),
       'providers': resolve('src/app/providers'),
       'services': resolve('src/app/services'),
@@ -39,7 +40,7 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      'config': resolve('src/utilities/config'),
+      // 'config': resolve('src/utilities/config'),
       'error': resolve('src/utilities/error'),
       'env': resolve('src/utilities/env'),
       'process.env': resolve('.env.json')

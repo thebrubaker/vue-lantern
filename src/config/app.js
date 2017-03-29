@@ -19,21 +19,19 @@ export default {
 
   /**
    * Registers all service providers for the application.
-   * @type {Array}
+   * @type {Object}
    */
   providers: {
-
-    // Application Service Providers
     api: require('src/app/providers/api'),
     auth: require('src/app/providers/auth'),
     events: require('src/app/providers/events'),
     firebase: require('src/app/providers/firebase'),
     http: require('src/app/providers/http'),
+    model: require('src/app/providers/model'),
     router: require('src/app/providers/router'),
     search: require('src/app/providers/search'),
     store: require('src/app/providers/store'),
     view: require('src/app/providers/view')
-
   },
 
   /**
@@ -42,15 +40,16 @@ export default {
    */
   aliases: [
 
-    'search',
     'api',
     'auth',
+    'events',
     'firebase',
     'http',
-    'events',
+    'model',
     'router',
-    'view',
-    'store'
+    'search',
+    'store',
+    'view'
 
   ]
 }
