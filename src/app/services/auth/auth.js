@@ -36,11 +36,28 @@ export default class AuthService {
 
   /**
    * Determine if the user is allowed to access a given route.
+   * @param  {object} guard  The guard object
+   * @return {boolean}  Returns true if the user is authorized, otherwise false.
+   */
+  allowed (guard) {
+    return this.selected_driver.allowed(guard)
+  }
+
+  /**
+   * Return the current user's scopes
+   * @return {array}  An array of the user's scopes.
+   */
+  scopes () {
+    return this.selected_driver.scopes()
+  }
+
+  /**
+   * Determine if the user is allowed to access a given route.
    * @param  {Route} to The route the user is trying to access.
    * @return {Boolean} Returns true if the user is authorized, otherwise false.
    */
-  allowed (to) {
-    return this.selected_driver.allowed(to)
+  routeGuard (route) {
+    return this.selected_driver.routeGuard(route)
   }
 
   /**

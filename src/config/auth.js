@@ -1,6 +1,14 @@
 export default {
 
-  'login_route': '/login',
+  /**
+   * Where to redirect a guest user on an auth check.
+   */
+  'guest': '/login',
+
+  /**
+   * Where to redirect an authorized user.
+   */
+  'redirect': '/dashboard',
 
   /**
    * The namespace of the user object in the data store

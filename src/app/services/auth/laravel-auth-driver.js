@@ -1,3 +1,5 @@
+import intersect from 'utilities/intersect'
+
 /**
  * An implementation of the Auth service. This service handles
  * authentication and authorization for users.
@@ -33,11 +35,40 @@ export default class LaravelAuth {
   }
 
   /**
+   * Return the current user's scopes
+   * @return {array}  An array of the user's scopes.
+   */
+  scopes () {
+    return this.store.get('auth/user/scopes')
+  }
+
+  /**
    * Determine if the user is allowed to access a given route.
    * @param  {Route} to The route the user is trying to access.
    * @return {Boolean} Returns true if the user is authorized, otherwise false.
    */
-  allowed (to) {
+  routeGuard ({ meta }) {
+    if (meta && meta.guard) {
+      return this.allowed(meta.guard)
+    }
+
+    return true
+  }
+
+  /**
+   * Determine if the user is allowed to access a given route.
+   * @param  {object} guard  The guard object
+   * @return {boolean}  Returns true if the user is authorized, otherwise false.
+   */
+  allowed (guard) {
+    if (guard && guard.allow) {
+      return !!intersect(this.scopes(), guard.allow).length
+    }
+
+    if (guard && guard.deny) {
+      return !intersect(this.scopes(), guard.allowed).length
+    }
+
     return true
   }
 
