@@ -6,8 +6,8 @@ import config from 'src/config/api'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (key, app) {
-  app.bind(key, function (container) {
+function boot (app) {
+  app.bind('api', function (container) {
     return new Api(container.http, config)
   })
 }

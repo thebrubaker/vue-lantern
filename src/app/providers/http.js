@@ -6,8 +6,8 @@ import config from 'src/config/http'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (key, app) {
-  app.bind(key, function (container) {
+function boot (app) {
+  app.bind('http', function (container) {
     return new Http(config)
   })
 }

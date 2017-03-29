@@ -6,8 +6,8 @@ import config from 'src/config/auth'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (key, app) {
-  app.bind(key, function (container) {
+function boot (app) {
+  app.bind('auth', function (container) {
     return new Auth(container, config)
   })
 }

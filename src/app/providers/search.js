@@ -6,8 +6,8 @@ import config from 'src/config/search'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (key, app) {
-  app.bind(key, function (container) {
+function boot (app) {
+  app.bind('search', function (container) {
     let service = new Search(container, config)
 
     // Let's pull out the search function from the service, so it's easy to use for basic search queries,

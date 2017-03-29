@@ -7,8 +7,8 @@ import config from 'src/config/events'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (key, app) {
-  app.bind(key, function (container) {
+function boot (app) {
+  app.bind('events', function (container) {
     return new Events(config)
   })
 }

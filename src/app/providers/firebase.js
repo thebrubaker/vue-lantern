@@ -6,8 +6,8 @@ import config from 'src/config/firebase'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (key, app) {
-  app.bind(key, function (container) {
+function boot (app) {
+  app.bind('firebase', function (container) {
     return firebase.initializeApp(config)
   })
 }

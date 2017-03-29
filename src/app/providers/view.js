@@ -6,8 +6,8 @@ import config from 'src/config/view'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (key, app) {
-  app.bind(key, function (container) {
+function boot (app) {
+  app.bind('view', function (container) {
     return new View(container, config)
   })
 }

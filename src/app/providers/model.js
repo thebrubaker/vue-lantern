@@ -6,8 +6,8 @@ import directory from 'utilities/directory'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (key, app) {
-  app.bind(key, function (container) {
+function boot (app) {
+  app.bind('model', function (container) {
     let service = new ModelService(app, directory('models'))
 
     let model = namespace => service.load(namespace)

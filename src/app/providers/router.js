@@ -8,8 +8,8 @@ import routes from 'routes'
  * @param  {Lantern} app The application.
  * @return {undefined}
  */
-function boot (key, app) {
-  app.bind(key, function (container) {
+function boot (app) {
+  app.bind('router', function (container) {
     return new Router(config, routes)
   })
 }

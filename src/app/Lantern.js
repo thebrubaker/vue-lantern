@@ -24,20 +24,20 @@ export default class Lantern {
    * Boots and registers all service providers for the application. Each provider should
    * include a boot and register method that takes the application as it's only
    * argument.
-   * @param  {Array} providers A list of providers to boot/register.
+   * @param  {Array} providers  A list of providers to boot/register.
    * @return {Lantern}  The application
    */
-  boot (providers = {}) {
-    Object.keys(providers).forEach(key => {
-      providers[key].default.boot(key, this)
+  boot (providers = []) {
+    providers.forEach(provider => {
+      provider.default.boot(this)
     })
 
     this.config.aliases.forEach(key => {
       this[key] = this.bottle.container[key]
     })
 
-    Object.keys(providers).forEach(key => {
-      providers[key].default.register(this)
+    providers.forEach(provider => {
+      provider.default.register(this)
     })
 
     return this
