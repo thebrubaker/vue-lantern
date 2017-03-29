@@ -1,5 +1,3 @@
-import routes from 'routes'
-
 export default {
 
   /**
@@ -20,12 +18,6 @@ export default {
    * Globally configure <router-link> default active class.
    */
   linkActiveClass: 'router-link-active',
-
-  /**
-   * Routes to be registered with the router service.
-   * @type {array}
-   */
-  routes: routes,
 
   /**
    * When using client-side routing, we may want to scroll to top when

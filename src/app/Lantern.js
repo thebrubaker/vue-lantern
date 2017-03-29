@@ -17,7 +17,6 @@ export default class Lantern {
   constructor (config) {
     this.bottle = new Bottle()
     this.config = config
-    this.boot()
     if (config.debug) window.app = this
   }
 
@@ -28,20 +27,29 @@ export default class Lantern {
    * @param  {Array} providers A list of providers to boot/register.
    * @return {Lantern}  The application
    */
-  boot () {
-    Object.keys(this.config.providers).forEach(key => {
-      this.config.providers[key].default.boot(key, this)
+  boot (providers = {}) {
+    Object.keys(providers).forEach(key => {
+      providers[key].default.boot(key, this)
     })
 
     this.config.aliases.forEach(key => {
       this[key] = this.bottle.container[key]
     })
 
-    Object.keys(this.config.providers).forEach(key => {
-      this.config.providers[key].default.register(this)
+    Object.keys(providers).forEach(key => {
+      providers[key].default.register(this)
     })
 
     return this
+  }
+
+  /**
+   * Render the root view instance for the application.
+   * @param  {VueComponent} rootViewInstance  The root Vue instance.
+   * @return {undefined}
+   */
+  render (rootViewInstance) {
+    this.view.init(rootViewInstance)
   }
 
   /**

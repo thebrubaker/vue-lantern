@@ -18,23 +18,6 @@ export default {
   debug: env('APP_DEBUG', true),
 
   /**
-   * Registers all service providers for the application.
-   * @type {Object}
-   */
-  providers: {
-    api: require('src/app/providers/api'),
-    auth: require('src/app/providers/auth'),
-    events: require('src/app/providers/events'),
-    firebase: require('src/app/providers/firebase'),
-    http: require('src/app/providers/http'),
-    model: require('src/app/providers/model'),
-    router: require('src/app/providers/router'),
-    search: require('src/app/providers/search'),
-    store: require('src/app/providers/store'),
-    view: require('src/app/providers/view')
-  },
-
-  /**
    * Register aliases for the application. Each alias will access that service from the application container.
    * @type {array}
    */

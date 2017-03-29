@@ -29,7 +29,6 @@ module.exports = {
       'layouts': resolve('src/resources/layouts'),
       'models': resolve('src/models'),
       'pages': resolve('src/pages'),
-      'providers': resolve('src/app/providers'),
       'services': resolve('src/app/services'),
       'src': resolve('src'),
       'store': resolve('src/store'),

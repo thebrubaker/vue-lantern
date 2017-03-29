@@ -1,4 +1,5 @@
 import app from 'app'
 import root from 'layouts/root'
+import services from 'src/config/services'
 
-// app.view.init(root)
+app.boot(services).render(root)

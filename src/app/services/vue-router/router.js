@@ -13,8 +13,8 @@ export default class VueRouterService {
    * @param  {object} config The configuration for the router.
    * @return {VueRouterService} The router service.
    */
-  constructor (config) {
-    this.service = new Router(config)
+  constructor (config, routes) {
+    this.service = new Router({ ...config, routes })
   }
 
   /**
