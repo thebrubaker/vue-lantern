@@ -1,6 +1,6 @@
 import actions from 'store/actions'
 import getters from 'store/getters'
-import modules from 'store/modules'
+import directory from 'utilities/directory'
 
 export default {
   /**
@@ -30,7 +30,7 @@ export default {
      * Modules for the store service.
      * @type {object}
      */
-    modules,
+    modules: directory('store/modules'),
 
     /**
      * Plugins to be registered with the store service.

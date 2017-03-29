@@ -1,6 +1,6 @@
-import { importDirectory, namespaceKeys as namespaceChannel } from 'utilities'
+import directory from 'utilities/directory'
+import { namespaceKeys } from 'utilities'
 
-const directory = require.context('../events', true, /\.js$/)
-let events = importDirectory(directory)
+let events = directory('src/events')
 
-export default Object.keys(events).map(channel => namespaceChannel(channel, events[channel]))
+export default Object.keys(events).map(channel => namespaceKeys(channel, events[channel]))

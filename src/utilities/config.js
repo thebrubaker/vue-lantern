@@ -1,10 +1,5 @@
-let { importDirectory } = require('./index')
-
-/**
- * Import the config directory as an object.
- * @type {Object}
- */
-let configuration = importDirectory(require.context('src/config', true, /\.js$/))
+let directory = require('./directory').default
+let configuration = directory('src/config')
 
 /**
  * Access a property on the configuration object using a dot-delimite string.
