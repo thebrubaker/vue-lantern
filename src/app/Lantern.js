@@ -26,7 +26,7 @@ export default class Lantern {
    * Boots and registers all service providers for the application. Each provider should
    * include a boot and register method that takes the application as it's only
    * argument.
-   * @param  {Array} providers a list of providers to boot/register
+   * @param  {Array} providers A list of providers to boot/register.
    * @return {undefined}
    */
   boot () {
