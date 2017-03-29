@@ -13,6 +13,7 @@ function boot (app) {
     let model = namespace => service.load(namespace)
     model.all = service.all.bind(service)
     model.register = service.register.bind(service)
+    model.boot = service.boot.bind(service)
 
     return model
   })
@@ -25,7 +26,7 @@ function boot (app) {
  * @return {undefined}
  */
 function register (app) {
-
+  app.model.boot()
 }
 
 export default { boot, register }

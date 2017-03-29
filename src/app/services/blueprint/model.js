@@ -11,7 +11,7 @@ export default class ModelService {
   constructor (app, models) {
     this.app = app
     this.config = models
-    this.models = this.boot(models)
+    this.blueprints = this.createBlueprints(models)
   }
 
   /**
@@ -19,7 +19,7 @@ export default class ModelService {
    * @return {Array}  An array of all models.
    */
   all () {
-    return this.models
+    return this.blueprints
   }
 
   /**
@@ -28,8 +28,8 @@ export default class ModelService {
    * @return {undefined}
    */
   register (callback) {
-    Object.keys(this.models).forEach(key => {
-      callback(this.models[key])
+    Object.keys(this.blueprints).forEach(key => {
+      callback(this.blueprints[key])
     })
   }
 
@@ -39,7 +39,7 @@ export default class ModelService {
    * @return {Blueprint}  The requested model.
    */
   load (namespace) {
-    return this.models[namespace]
+    return this.blueprints[namespace]
   }
 
   /**
@@ -47,10 +47,18 @@ export default class ModelService {
    * @param  {object} models  The models configuration.
    * @return {object}  A models object.
    */
-  boot (models) {
+  createBlueprints (models) {
     return Object.keys(models).reduce((carry, key) => {
-      carry[key] = new Blueprint(key, models[key])
+      carry[key] = new Blueprint({ namespace: key, ...models[key], app: this.app })
       return carry
     }, {})
+  }
+
+  /**
+   * Boot all models into the application.
+   * @return {undefined}
+   */
+  boot () {
+    Object.keys(this.blueprints).forEach(key => this.blueprints[key].boot())
   }
 }

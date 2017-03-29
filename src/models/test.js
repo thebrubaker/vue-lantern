@@ -10,21 +10,21 @@ export default {
    * The name of the model.
    * @type {String}
    */
-  name: 'product',
+  name: 'test',
 
   /**
    * The location of the model.
    * @type {String}
    */
-  location: 'product',
+  location: 'test',
 
   /**
-   * If the driver supports loading relationships, list which
-   * relationships you want loaded.
+   * If the driver supports loading relationships, define which
+   * relationships you want loaded with the model.
    * @type {Array}
    */
   with: [
-    'inventory'
+    'children'
   ],
 
   /**
@@ -80,48 +80,35 @@ export default {
   },
 
   /**
-   * The configuration for making a form in the data store for this model.
+   * The configuration for creating a data store form module.
    * @type {Object}
    */
   form: {
-    namespace: 'catalog/product/form',
+    namespace: 'test/form',
     fields: {
       name: {
         default: '',
         validation: 'required|string',
-        error: 'The Name is required.'
+        error: 'A name is required.'
       },
-      base_sku: {
+      location: {
         default: '',
         validation: 'required|string',
-        error: 'The Base SKU is required.'
-      },
-      full_price: {
-        default: '',
-        validation: 'required|number',
-        error: 'A full price is required.'
-      },
-      discount_price: {
-        default: '',
-        validation: 'number'
+        error: 'A location is required.'
       }
     }
   },
 
   /**
-   * The configuration for create a data store module.
+   * The configuration for creating a data store module.
    * @type {Object}
    */
   module: {
-    namespace: 'catalog/product',
+    namespace: 'test',
     bootstrap: [ 'getters', 'mutations' ],
     state: {
       'name': '',
-      'thumbnail': '',
-      'base_sku': '',
-      'full_price': '',
-      'discount_price': '',
-      'inventory': ''
+      'location': ''
     }
   }
 }
