@@ -22,20 +22,19 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.vue', '.json', '.tsv'],
     alias: {
-      'vue$': 'vue/dist/vue.esm.js',
-      'bootstrap': resolve('src/bootstrap'),
       'app': resolve('src/bootstrap/app'),
+      'assets': resolve('src/assets'),
+      'bootstrap': resolve('src/bootstrap'),
       'drivers': resolve('src/app/drivers'),
+      'layouts': resolve('src/resources/layouts'),
+      'pages': resolve('src/pages'),
       'providers': resolve('src/app/providers'),
       'services': resolve('src/app/services'),
+      'src': resolve('src'),
       'store': resolve('src/store'),
       'routes': resolve('src/routes'),
-      'layouts': resolve('src/resources/layouts'),
-      'middleware': resolve('src/middleware'),
       'utilities': resolve('src/utilities'),
-      'config': resolve('src/config'),
-      'assets': resolve('src/assets'),
-      'src': resolve('src')
+      'vue$': 'vue/dist/vue.esm.js'
     }
   },
   plugins: [
