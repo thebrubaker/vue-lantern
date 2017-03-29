@@ -20,7 +20,7 @@ function boot (app) {
  * @return {undefined}
  */
 function register (app) {
-  app.events.register(app, directory('src/events'))
+  app.events.register(directory('src/events'))
 }
 
 export default { boot, register }

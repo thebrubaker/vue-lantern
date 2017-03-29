@@ -22,9 +22,9 @@ export default class PubSubEventsService {
    * @param  {Object} events An object with channels as keys.
    * @return {undefined}
    */
-  register (app, channels) {
+  register (channels) {
     Object.keys(channels).map(key => {
-      return namespaceKeys(key, channels[key](app))
+      return namespaceKeys(key, channels[key])
     }).forEach(channel => {
       this.registerChannel(channel)
     })
