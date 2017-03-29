@@ -28,7 +28,7 @@ export default class Cache {
     key === null
       ? window.localStorage.setItem(this.key, JSON.stringify(this.value))
       : window.localStorage.setItem(key, JSON.stringify(value))
-    
+
     return this
   }
 
@@ -43,5 +43,14 @@ export default class Cache {
       : window.localStorage.removeItem(key)
 
     return this
+  }
+
+  /**
+   * Load a key from storage and JSON parse it.
+   * @param  {string} key  The key in local storage.
+   * @return {mixed}  The returned value from local storage.
+   */
+  static load (key) {
+    return JSON.parse(window.localStorage.getItem(key))
   }
 }

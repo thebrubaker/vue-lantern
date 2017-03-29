@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
-import bootstrap from './bootstrap'
+import bootstrap from './vuex-bootstrappers'
 import Cache from './cache'
 
 Vue.use(Vuex)
@@ -13,7 +13,7 @@ export default class VuexStoreService {
    * @return {undefined}
    */
   constructor (config) {
-    bootstrapModules(config.store.modules)
+    bootstrap.modules(config.store.modules)
     this.vuex = new Vuex.Store(config.store)
     this.config = config
     this.initialState = JSON.parse(JSON.stringify(this.vuex.state))
@@ -32,11 +32,10 @@ export default class VuexStoreService {
   }
 
   /**
-   * Boot the data store by loading cached data
-   * @param {object} list of filenames as an object
-   * @return {array} list of keys to boot from cache
+   * Load data from local storage into the data store.
+   * @return {undefined}
    */
-  bootCachedData (list) {
+  bootCachedData () {
     Object.keys(this.vuex['_mutations']).forEach(item => {
       this.loadFromCache(item)
     })
@@ -44,8 +43,8 @@ export default class VuexStoreService {
 
   /**
    * Commit a mutation
-   * @param  {string} key that needs to be updated
-   * @param  {any} value for said key
+   * @param  {string} key  The name of the mutation.
+   * @param  {any} value  The value for the mutation.
    * @return {Cache} Cache
    */
   commit (key, value) {
@@ -107,7 +106,7 @@ export default class VuexStoreService {
    */
   get (key) {
     if (typeof this.vuex.getters[key] === 'undefined') {
-      return console.error(`You are trying to access an undefined getter "${key}" on your data store.`)
+      return error(`You are trying to access an undefined getter "${key}" on your data store.`, 'VuexStoreService')
     }
 
     return this.vuex.getters[key]
@@ -124,85 +123,28 @@ export default class VuexStoreService {
   }
 
   /**
-   * Load some data into the store from cache by key
-   * @param {string} key in localStorage
-   * @return {undefined} undefined
+   * Load some data into the store from local storage
+   * @param {string} key  The key in local storage.
+   * @return {object}  The data loaded from local storage.
    */
   loadFromCache (key) {
-    let value = JSON.parse(window.localStorage.getItem(key))
-    if (value !== null) {
-      this.set(key, value)
-    }
+    let value = Cache.load(key)
+    if (value !== null) this.set(key, value)
+    return { key, value }
   }
 
   /**
-   * Map a new state to a module in the data store.
-   * @param  {[type]} module   [description]
-   * @param  {[type]} newState [description]
-   * @return {[type]}          [description]
+   * Map data to the data store through mutations
+   * @param  {string} module  The name of the module namespace.
+   * @param  {object} data  The data to be mapped.
+   * @return {undefined}
    */
-  mapState (module, newState) {
-    Object.keys(newState).forEach(key => {
+  mapDataToState (module, data) {
+    Object.keys(data).forEach(key => {
       let name = `${module}/${key}`
       if (this.vuex['_mutations'][name] !== undefined) {
-        this.set(name, newState[key])
+        this.set(name, data[key])
       }
     })
   }
-}
-
-/**
- * Bootstrap getters and mutations on the store
- * @param  {object} modules list of modules with namespaces
- * @return {undefined} undefined does not return anything
- */
-function bootstrapModules (modules) {
-  Object.keys(modules).forEach(key => {
-    bootstrapModule(modules[key])
-    if (modules[key].modules) {
-      bootstrapModules(modules[key].modules)
-    }
-  })
-}
-
-/**
- * Instantiates/maps getters, mutations and actions for each derived module.
- * @param  {object} module each module in the store
- * @return {[type]}        [description]
- */
-function bootstrapModule (module) {
-  if (!module.bootstrap) {
-    return
-  }
-
-  bootstrap.setDefaults(module)
-
-  module.bootstrap.forEach(type => {
-    bootstrapType(type, module)
-  })
-}
-
-/**
- * Execute the type of bootstrap to run.
- * @param  {string} type  The bootstrap type.
- * @return {undefined}
- */
-function bootstrapType (type, module) {
-  if (type === 'form') {
-    return bootstrap.form(module)
-  }
-
-  if (type === 'table') {
-    return bootstrap.table(module)
-  }
-
-  if (type === 'getters') {
-    return bootstrap.getters(module)
-  }
-
-  if (type === 'mutations') {
-    return bootstrap.mutations(module)
-  }
-
-  throw new Error('[Vuex Bootstrap] You are attempting to bootstrap a type that does not exist: ' + type)
 }
