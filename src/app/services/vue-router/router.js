@@ -24,9 +24,9 @@ export default class VueRouterService {
    * @return {undefined}
    */
   registerMiddleware (app, middlewares) {
-    middlewares.forEach(middleware => {
-      this.beforeEach(middleware.handleBefore(app))
-      this.afterEach(middleware.handleAfter(app))
+    Object.keys(middlewares).forEach(key => {
+      this.beforeEach(middlewares[key].handleBefore(app))
+      this.afterEach(middlewares[key].handleAfter(app))
     })
   }
 
