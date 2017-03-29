@@ -10,13 +10,13 @@ export default {
    * The name of the model.
    * @type {String}
    */
-  name: 'test',
+  name: 'example',
 
   /**
    * The location of the model.
    * @type {String}
    */
-  location: 'test',
+  location: 'example',
 
   /**
    * If the driver supports loading relationships, define which
@@ -84,7 +84,7 @@ export default {
    * @type {Object}
    */
   form: {
-    namespace: 'test/form',
+    namespace: 'example/form',
     fields: {
       name: {
         default: '',
@@ -104,7 +104,7 @@ export default {
    * @type {Object}
    */
   module: {
-    namespace: 'test',
+    namespace: 'example',
     bootstrap: [ 'getters', 'mutations' ],
     state: {
       'name': '',
