@@ -14,6 +14,7 @@ export default class VuexStoreService {
    */
   constructor (config) {
     bootstrap.modules(config.store.modules)
+    this.bootstrap = bootstrap
     this.vuex = new Vuex.Store(config.store)
     this.config = config
     this.initialState = JSON.parse(JSON.stringify(this.vuex.state))
@@ -96,6 +97,34 @@ export default class VuexStoreService {
    */
   subscribe (handler) {
     return this.vuex.subscribe(handler)
+  }
+
+  /**
+   * Register a dynamic module.
+   * @param  {string|Array} path  The path to register the module.
+   * @param  {Module} module  The module to be registered.
+   * @return {undefined}
+   */
+  registerModule (path, module) {
+    return this.vuex.registerModule(path, module)
+  }
+
+  /**
+   * Unregister a dynamic module.
+   * @param  {string|Array} path  The path to register the module.
+   * @return {undefined}
+   */
+  unregisterModule (path) {
+    return this.vuex.unregisterModule(path)
+  }
+
+  /**
+   * Hot swap new actions and mutations.
+   * @param  {Object} newOptions  The new options.
+   * @return {undefined}
+   */
+  hotUpdate (newOptions) {
+    return this.vuex.hotUpdate(newOptions)
   }
 
   /**
