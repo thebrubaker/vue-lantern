@@ -22,6 +22,15 @@ export default class VueViewService {
   }
 
   /**
+   * Register a plugin with Vue.
+   * @param  {function|object} plugin  The plugin to install.
+   * @return {undefined}
+   */
+  use (plugin) {
+    Vue.use(plugin)
+  }
+
+  /**
    * Initialize the selected Vue Layout
    * @return {undefined} Returns nothing.
    */

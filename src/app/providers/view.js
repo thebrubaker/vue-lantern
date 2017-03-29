@@ -18,7 +18,9 @@ function boot (key, app) {
  * @return {undefined}
  */
 function register (app) {
-
+  config('view.plugins').forEach(plugin => {
+    app.view.use(plugin)
+  })
 }
 
 export default { boot, register }

@@ -24,7 +24,11 @@ export default {
    * Plugins to be registered with the view service.
    * @type {array}
    */
-  plugins: [],
+  plugins: [
+    require('services/vue/plugins/guard'),
+    require('services/vue/plugins/responsive'),
+    require('services/vue/plugins/events')
+  ],
 
   /**
    * Global components for the view service.
