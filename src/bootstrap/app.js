@@ -1,4 +1,10 @@
-import Lantern from 'src/app/Lantern'
-import config from 'config/app'
+let Lantern = require('src/app/Lantern').default
+let config = require('src/config/app').default
 
-export default new Lantern(config)
+let app = new Lantern(config)
+
+module.exports = app
+
+config.aliases.forEach(alias => {
+  module.exports[alias] = app[alias]
+})
