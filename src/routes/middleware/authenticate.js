@@ -15,7 +15,7 @@ export default {
       }
 
       // If not authenticated and not accessing the guest path, redirect to the guest path
-      if (!auth.authenticated() && to.path !== config.guest) {
+      if (!auth.authenticated() && to.path !== config.guest && to.meta && to.meta.auth) {
         return next(config.guest)
       }
 

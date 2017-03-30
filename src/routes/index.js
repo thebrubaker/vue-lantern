@@ -1,10 +1,17 @@
 export default [
   {
     path: '/',
+    redirect: '/admin'
+  },
+  {
+    path: '/admin',
     component: require('layouts/admin'),
     meta: {
-      name: 'Home',
-      icon: 'home'
+      auth: true
     }
+  },
+  {
+    path: '/login',
+    component: require('layouts/login')
   }
 ]
