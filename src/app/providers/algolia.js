@@ -1,5 +1,5 @@
 import algolia from 'algoliasearch'
-import config from 'src/config/algolia'
+import config from 'src/config/services'
 
 /**
  * These services are booted during app initialization.
@@ -8,7 +8,7 @@ import config from 'src/config/algolia'
  */
 function boot (app) {
   app.bind('algolia', function (container) {
-    return algolia(config.id, config.key)
+    return algolia(config.algolia.id, config.algolia.key)
   })
 }
 

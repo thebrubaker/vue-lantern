@@ -12,8 +12,9 @@ export default class LaravelAuth {
    * @param  {object} config Configuration for the auth service.
    * @return {LaravelAuth} The authentication service.
    */
-  constructor (api, store, config) {
+  constructor (api, store, config, connection) {
     this.config = config
+    this.connection = connection
     this.api = api
     this.store = store
   }
@@ -105,7 +106,7 @@ export default class LaravelAuth {
     return Promise.resolve()
       // (1)
       .then(() => {
-        return this.http.post('oauth/token', this.oauthPayload({ username, password }))
+        return this.api.post(this.api.auth_path, this.oauthPayload({ username, password }))
       })
       // (2)
       .then(response => {
@@ -113,7 +114,7 @@ export default class LaravelAuth {
         this.store.commit('auth/guard/expires_in', response.data.expires_in).cache()
         this.store.commit('auth/guard/access_token', response.data.access_token).cache()
         this.store.commit('auth/guard/refresh_token', response.data.refresh_token).cache()
-        return this.http.get('user')
+        return this.api.get('user')
       })
       // (3)
       .then(response => {
@@ -130,7 +131,7 @@ export default class LaravelAuth {
    * @return {undefined}
    */
   refreshToken () {
-    return this.http.post('oauth/token', this.oauthRefreshPayload())
+    return this.api.post(this.api.auth_path, this.oauthRefreshPayload())
       .then(response => {
         this.store.commit('auth/guard/token_type', response.data.token_type).cache()
         this.store.commit('auth/guard/expires_in', response.data.expires_in).cache()

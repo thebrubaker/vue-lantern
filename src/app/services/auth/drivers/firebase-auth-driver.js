@@ -13,9 +13,9 @@ export default class FirebaseAuth {
    * @return {FirebaseAuth} The authentication service.
    */
   constructor (firebase, store, config) {
-    this.config = config
     this.firebase = firebase
     this.store = store
+    this.config = config
   }
 
   /**

@@ -1,8 +1,19 @@
 export default {
 
-  // Base url for the API
-  baseURL: env('API_BASE_URL'),
+  /**
+   * Base URL for the API.
+   * @type {string}
+   */
+  'base_url': env('LARAVEL_BASE_URL', ''),
 
-  // Default results per page if pagination is requested
-  perPage: 15
+  /**
+   * The authorization path for the API.
+   */
+  'auth_path': env('LARAVEL_AUTH_PATH', 'oauth/token'),
+
+  /**
+   * Rows per page for paginated results.
+   * @type {Number}
+   */
+  'perPage': 15
 }

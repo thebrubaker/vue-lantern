@@ -13,6 +13,7 @@ export default class LaravelApiService {
    */
   constructor (http, config) {
     this.http = http.create(config)
+    this.auth_path = config.auth_path
     this.config = config
   }
 

@@ -1,18 +1,20 @@
-/**
- * List all service providers you want registered with the application. A service provider
- * should have two methods: bind(app) and register(app).
- * @type {Array}
- */
-export default [
-  require('src/app/providers/algolia'),
-  require('src/app/providers/api'),
-  require('src/app/providers/auth'),
-  require('src/app/providers/events'),
-  require('src/app/providers/firebase'),
-  require('src/app/providers/http'),
-  require('src/app/providers/model'),
-  require('src/app/providers/router'),
-  require('src/app/providers/search'),
-  require('src/app/providers/store'),
-  require('src/app/providers/view')
-]
+export default {
+  'algolia': {
+    id: env('ALGOLIA_ID', ''),
+    key: env('ALGOLIA_KEY', '')
+  },
+  'firebase': {
+    'apiKey': env('FIREBASE_API_KEY'),
+    'authDomain': env('FIREBASE_AUTH_DOMAIN'),
+    'databaseURL': env('FIREBASE_DATABASE_URL'),
+    'storageBucket': env('FIREBASE_STORAGE_BUCKET'),
+    'messagingSenderId': env('FIREBASE_MESSAGING_SENDER_ID')
+  },
+  'laravel': {
+    'base_url': env('LARAVEL_BASE_URL', ''),
+    'client_id': env('LARAVEL_CLIENT_ID', ''),
+    'client_secret': env('LARAVEL_CLIENT_SECRET', ''),
+    'grant_type': env('LARAVEL_GRANT_TYPE', 'password'),
+    'scope': env('LARAVEL_SCOPE', '*')
+  }
+}
