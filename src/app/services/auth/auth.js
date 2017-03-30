@@ -1,5 +1,5 @@
-import FirebaseAuthDriver from './firebase-auth-driver'
-import LaravelSearchDriver from './laravel-auth-driver'
+import FirebaseAuthDriver from './drivers/firebase-auth-driver'
+import LaravelSearchDriver from './drivers/laravel-auth-driver'
 
 export default class AuthService {
 
@@ -10,20 +10,41 @@ export default class AuthService {
    * @param  {object} config Configuration for the auth service.
    * @return {AuthService} The authentication service.
    */
-  constructor ({ api, firebase, store }, config) {
+  constructor (config) {
+    this.config = config
     this.drivers = {
-      firebase: new FirebaseAuthDriver(firebase, store, config),
-      laravel: new LaravelSearchDriver(api, store, config)
+      firebase: app.make('firebase-auth-driver'),
+      laravel: app.make('laravel-auth-driver')
     }
-    switch (config.driver) {
-      case 'firebase':
-        this.selected_driver = this.drivers.firebase
-        break
-      case 'laravel':
-        this.selected_driver = this.drivers.laravel
-        break
-      default: error(`The driver you selected is not supported: ${config.driver}`, 'AuthService')
+    this.driver = config.driver || 'no driver provided'
+  }
+
+  /**
+   * Change the driver for the search service.
+   * @param  {string} type  The type of driver.
+   * @return {AlgoliaSearchDriver|LaravelSearchDriver}  The selected driver.
+   */
+  get driver () {
+    return function (type) {
+      if (this.drivers[type] === undefined) {
+        return error(`The driver selected is not valid: '${type}'`, 'AuthService')
+      }
+
+      return this.drivers[type]
     }
+  }
+
+  /**
+   * Set the selected driver from those that are available.
+   * @param  {string} type  The driver to select.
+   * @return {AlgoliaSearchDriver|LaravelSearchDriver}  The driver implementation.
+   */
+  set driver (type) {
+    if (this.drivers[type] === undefined) {
+      return error(`The driver selected is not valid: '${type}'`, 'AuthService')
+    }
+
+    this.selectedDriver = this.drivers[type]
   }
 
   /**
@@ -31,7 +52,7 @@ export default class AuthService {
    * @return {Boolean} Returns true if the user is authenticated, otherwise false.
    */
   authenticated () {
-    return this.selected_driver.authenticated()
+    return this.selectedDriver.authenticated()
   }
 
   /**
@@ -40,7 +61,7 @@ export default class AuthService {
    * @return {boolean}  Returns true if the user is authorized, otherwise false.
    */
   allowed (guard) {
-    return this.selected_driver.allowed(guard)
+    return this.selectedDriver.allowed(guard)
   }
 
   /**
@@ -48,7 +69,7 @@ export default class AuthService {
    * @return {array}  An array of the user's scopes.
    */
   scopes () {
-    return this.selected_driver.scopes()
+    return this.selectedDriver.scopes()
   }
 
   /**
@@ -57,7 +78,7 @@ export default class AuthService {
    * @return {Boolean} Returns true if the user is authorized, otherwise false.
    */
   routeGuard (route) {
-    return this.selected_driver.routeGuard(route)
+    return this.selectedDriver.routeGuard(route)
   }
 
   /**
@@ -65,7 +86,7 @@ export default class AuthService {
    * @return {object} The authenticated user.
    */
   user () {
-    return this.selected_driver.user()
+    return this.selectedDriver.user()
   }
 
   /**
@@ -73,7 +94,7 @@ export default class AuthService {
    * @return {undefined}
    */
   logout () {
-    return this.selected_driver.logout()
+    return this.selectedDriver.logout()
   }
 
   /**
@@ -83,7 +104,7 @@ export default class AuthService {
    * @return {Promise} Resolves with the authorized user.
    */
   attempt (email, password) {
-    return this.selected_driver.attempt(email, password)
+    return this.selectedDriver.attempt(email, password)
   }
 
   /**
@@ -91,6 +112,6 @@ export default class AuthService {
    * @return {undefined}
    */
   refreshToken () {
-    return this.selected_driver.refreshToken()
+    return this.selectedDriver.refreshToken()
   }
 }

@@ -1,4 +1,6 @@
 import Auth from 'services/auth/auth'
+import FirebaseDriver from 'services/auth/drivers/firebase-auth-driver'
+import LaravelDriver from 'services/auth/drivers/laravel-auth-driver'
 import config from 'src/config/auth'
 
 /**
@@ -7,8 +9,14 @@ import config from 'src/config/auth'
  * @return {undefined}
  */
 function boot (app) {
+  app.bind('firebase-auth-driver', function ({ firebase, store }) {
+    return new FirebaseDriver(firebase, store, config)
+  })
+  app.bind('laravel-auth-driver', function ({ api, store }) {
+    return new LaravelDriver(api, store, config)
+  })
   app.bind('auth', function (container) {
-    return new Auth(container, config)
+    return new Auth(config)
   })
 }
 
