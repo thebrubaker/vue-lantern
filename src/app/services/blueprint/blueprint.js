@@ -69,7 +69,7 @@ export default class Blueprint {
   /**
    * Fetch a specific model by it's id.
    * @param  {string} id  The model's id.
-   * @return {Object}  The model of the corresponding id.
+   * @return {Promise}  A promise that resolves with the model.
    */
   fetch (id) {
     return new Promise((resolve, reject) => {
@@ -83,13 +83,44 @@ export default class Blueprint {
 
   /**
    * Create a new model.
-   * @param  {string} id  The model's id.
-   * @return {Object}  The model of the corresponding id.
+   * @param  {object} data  The data to write.
+   * @return {Promise}  A promise that resolves with the model.
    */
   create (data) {
     return new Promise((resolve, reject) => {
       this.selectedDriver.create(data).then(data => {
         app.events.fire(`${this.name}.created`, data) && resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
+
+  /**
+   * Create a new model.
+   * @param  {string} id  The model's id.
+   * @param  {object} data  The data to write.
+   * @return {Promise}  A promise that resolves with the model.
+   */
+  update (id, data) {
+    return new Promise((resolve, reject) => {
+      this.selectedDriver.update(id, data).then(data => {
+        app.events.fire(`${this.name}.updated`, data) && resolve(data)
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  }
+
+  /**
+   * Delete a model.
+   * @param  {string} id  The model's id.
+   * @return {Promise}  A promise that resolves with true.
+   */
+  delete (id) {
+    return new Promise((resolve, reject) => {
+      this.selectedDriver.delete(id).then(data => {
+        app.events.fire(`${this.name}.deleted`, id) && resolve(data)
       }).catch(error => {
         reject(error)
       })
