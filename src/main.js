@@ -1,5 +1,7 @@
 import app from 'app'
-import root from 'layouts/root'
+import view from 'components/root'
 import services from 'src/config/services'
+import directory from 'utilities/directory'
+let modules = directory('store/modules')
 
-app.boot(services).render(root)
+app.boot(services).load(modules).render(view)
