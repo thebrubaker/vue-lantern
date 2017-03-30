@@ -2,6 +2,8 @@
 
 > A project template for building large vue.js applications. Many useful tools built in, but totally flexible to use or replace what you don't like or don't need.
 
+Take the application for a spin: [vue-lantern](https://lantern-1dd90.firebaseapp.com)
+
 ## Features
 
 Dependency Container - Declare your dependencies for your application and let bottle.js manage your dependency tree.
