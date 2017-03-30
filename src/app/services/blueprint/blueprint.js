@@ -153,7 +153,6 @@ export default class Blueprint {
    * @return {undefined}
    */
   registerModule (module) {
-    app.store.bootstrap.module(module)
     try {
       this.createStoreModule(module)
     } catch (exception) {
@@ -168,7 +167,6 @@ export default class Blueprint {
    */
   registerForm (form) {
     let module = { namespace: form.namespace, bootstrap: ['form'], form: form.fields }
-    app.store.bootstrap.module(module)
     try {
       this.createStoreModule(module)
     } catch (exception) {

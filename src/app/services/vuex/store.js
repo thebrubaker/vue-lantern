@@ -13,12 +13,38 @@ export default class VuexStoreService {
    * @return {undefined}
    */
   constructor (config) {
-    bootstrap.modules(config.store.modules)
-    this.bootstrap = bootstrap
-    this.vuex = new Vuex.Store(config.store)
     this.config = config
-    this.initialState = JSON.parse(JSON.stringify(this.vuex.state))
-    this.bootCachedData()
+    this.vuex = new Vuex.Store(config)
+  }
+
+  /**
+   * Load modules into the data store.
+   * @param  {Object} modules  The modules.
+   * @return {undefined}
+   */
+  init (modules) {
+    this.modules = this.registerModules(modules)
+    this.initialState = this.deepCopy(this.vuex.state)
+    this.cachedData = this.bootCachedData()
+  }
+
+  /**
+   * Deep copy an object, such as the state of the data store.
+   * @param  {Object} object  The object to be copied
+   * @return {Object}  The new, copied object.
+   */
+  deepCopy (object) {
+    return JSON.parse(JSON.stringify(object))
+  }
+
+  /**
+   * Mutates the module by bootstrapping state, mutations, getters and actions if
+   * configured under module.bootstrap.
+   * @param  {Object} module  Data store module.
+   * @return {Object}  The bootstrapped module.
+   */
+  bootstrapModule (module) {
+    return bootstrap.module(module)
   }
 
   /**
@@ -37,9 +63,20 @@ export default class VuexStoreService {
    * @return {undefined}
    */
   bootCachedData () {
-    Object.keys(this.vuex['_mutations']).forEach(item => {
-      this.loadFromCache(item)
+    return Object.keys(this.vuex['_mutations']).map(item => {
+      return this.loadFromCache(item)
     })
+  }
+
+  /**
+   * Load some data into the store from local storage
+   * @param {string} key  The key in local storage.
+   * @return {object}  The data loaded from local storage.
+   */
+  loadFromCache (key) {
+    let value = Cache.load(key)
+    if (value !== null) this.set(key, value)
+    return { key, value }
   }
 
   /**
@@ -100,13 +137,27 @@ export default class VuexStoreService {
   }
 
   /**
+   * Register modules with the data store.
+   * @param  {Object} modules  An object of modules.
+   * @return {undefined}
+   */
+  registerModules (modules) {
+    return Object.keys(modules).map(key => {
+      return this.registerModule(key, modules[key])
+    })
+  }
+
+  /**
    * Register a dynamic module.
    * @param  {string|Array} path  The path to register the module.
    * @param  {Module} module  The module to be registered.
-   * @return {undefined}
+   * @return {Object}  The registered module.
    */
   registerModule (path, module) {
-    return this.vuex.registerModule(path, module)
+    this.bootstrapModule(module)
+    this.vuex.registerModule(path, module)
+
+    return module
   }
 
   /**
@@ -149,17 +200,6 @@ export default class VuexStoreService {
    */
   set (key, value) {
     return this.commit(key, value)
-  }
-
-  /**
-   * Load some data into the store from local storage
-   * @param {string} key  The key in local storage.
-   * @return {object}  The data loaded from local storage.
-   */
-  loadFromCache (key) {
-    let value = Cache.load(key)
-    if (value !== null) this.set(key, value)
-    return { key, value }
   }
 
   /**

@@ -13,10 +13,9 @@ export default {
   modules (modules) {
     Object.keys(modules).forEach(key => {
       this.module(modules[key])
-      if (modules[key].modules) {
-        this.modules(modules[key].modules)
-      }
     })
+
+    return modules
   },
 
   /**
@@ -25,23 +24,26 @@ export default {
    * @return {undefined}
    */
   module (module) {
-    if (!module.bootstrap) return
+    if (module.bootstrap) {
+      this.defaults(module)
+      module.bootstrap.forEach(type => {
+        switch (type) {
+          case 'form':
+            return this.form(module)
+          case 'table':
+            return this.table(module)
+          case 'getters':
+            return this.getters(module)
+          case 'mutations':
+            return this.mutations(module)
+          default: throw new Error('[Vuex Bootstrappers] Bootstrap type does not exist: ' + type)
+        }
+      })
+    }
 
-    this.defaults(module)
-
-    module.bootstrap.forEach(type => {
-      switch (type) {
-        case 'form':
-          return this.form(module)
-        case 'table':
-          return this.table(module)
-        case 'getters':
-          return this.getters(module)
-        case 'mutations':
-          return this.mutations(module)
-        default: throw new Error('[Vuex Bootstrappers] Bootstrap type does not exist: ' + type)
-      }
-    })
+    if (module.modules) {
+      this.modules(module.modules)
+    }
   },
   defaults,
   form,
