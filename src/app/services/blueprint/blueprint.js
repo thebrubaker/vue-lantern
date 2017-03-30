@@ -1,5 +1,6 @@
 import FirebaseDriver from './drivers/firebase-driver'
 import AlgoliaDriver from './drivers/algolia-driver'
+import LaravelDriver from './drivers/laravel-driver'
 import { namespaceKeys } from 'utilities'
 
 export default class Blueprint {
@@ -13,7 +14,8 @@ export default class Blueprint {
     this.config = config
     this.drivers = {
       'firebase': new FirebaseDriver(this),
-      'algolia': new AlgoliaDriver(this)
+      'algolia': new AlgoliaDriver(this),
+      'laravel': new LaravelDriver(this)
     }
     this.driver = driver || config.driver || 'no driver provided'
   }
