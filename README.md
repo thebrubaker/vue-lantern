@@ -1,6 +1,36 @@
 # Vue Lantern
 
-> A Vue.js project
+> A project setup for building large-scale vue.js applications. Many useful tools built in, but totally flexible to use or replace what you don't like or don't need.
+
+## Features
+
+Dependency Container - Declare your dependencies for your application and let bottle.js manage your dependency tree.
+
+``` javascript
+app.make('events').fire('example.test', 'This is a test!')
+```
+
+Auth - Authenticate and authorize your users with ease. Supports firebase and laravel drivers.
+
+``` javascript
+auth.attempt('user@lantern.com', 'password')
+auth.allowed(user.scopes)
+```
+
+Database & Search - Support for laravel, firebase and algolia out of the box.
+
+``` javascript
+search('examples/foo', 'tag')
+search.driver('algolia').searchIndex('examples_index', 'tag')
+```
+
+Blueprint - Define your data models once, bootstrap your access to data with ease!
+
+``` javascript
+model('example').driver('firebase').fetch(1)
+model('example').driver('laravel').delete(2)
+model('example').driver('algolia').create({ name: 'test', message: 'Hello world!'})
+```
 
 ## Build Setup
 
