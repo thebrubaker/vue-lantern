@@ -1,6 +1,6 @@
 # Vue Lantern
 
-> A project setup for building large-scale vue.js applications. Many useful tools built in, but totally flexible to use or replace what you don't like or don't need.
+> A project template for building large vue.js applications. Many useful tools built in, but totally flexible to use or replace what you don't like or don't need.
 
 ## Features
 
@@ -19,6 +19,8 @@ app.make('events').fire('example.test', 'This is a test!')
 Auth - Authenticate and authorize your users with ease. Supports firebase and laravel drivers.
 
 ``` javascript
+import { auth } from 'app'
+
 auth.attempt('user@lantern.com', 'password')
 auth.allowed(user.scopes)
 ```
