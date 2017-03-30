@@ -33,7 +33,7 @@ export default class Lantern {
     })
 
     this.config.aliases.forEach(key => {
-      this[key] = this.bottle.container[key]
+      this[key] = this.make(key)
     })
 
     providers.forEach(provider => {
@@ -80,6 +80,19 @@ export default class Lantern {
     this.bottle.instanceFactory(name, implementation)
 
     return this
+  }
+
+  /**
+   * Return a service from the container.
+   * @param  {[type]} service [description]
+   * @return {[type]}         [description]
+   */
+  make (service) {
+    if (this.bottle.container[service] === undefined) {
+      return error(`The service you requested has not been bound to the container: ${service}`, 'App')
+    }
+
+    return this.bottle.container[service]
   }
 
   /**
