@@ -1,6 +1,6 @@
 <template>
 <div class="admin">
-  <h1>Vue Lantern</h1>
+  <h1>Vue Lantern [Alpha]</h1>
   <span>A project template for ambitious single-page applications.</span>
   <router-view></router-view>
 </div>
