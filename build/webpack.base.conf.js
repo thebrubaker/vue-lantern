@@ -26,6 +26,7 @@ module.exports = {
       'assets': resolve('src/assets'),
       'bootstrap': resolve('src/bootstrap'),
       'drivers': resolve('src/app/drivers'),
+      'components': resolve('src/components'),
       'layouts': resolve('src/components/layouts'),
       // 'models': resolve('src/bootstrap/models'),
       'pages': resolve('src/pages'),
