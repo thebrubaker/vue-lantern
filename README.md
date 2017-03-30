@@ -1,4 +1,4 @@
-# Vue Lantern
+# Vue Lantern [Alpha]
 
 > A project template for building large vue.js applications. Many useful tools built in, but totally flexible to use or replace what you don't like or don't need.
 
