@@ -1,3 +1,5 @@
+import config from 'src/config/auth'
+
 export default {
 
   /**
@@ -9,12 +11,12 @@ export default {
     return (to, from, next) => {
       // If authenticated and accessing a guest only route, redirect to appropriate page
       if (auth.authenticated() && to.meta && to.meta.guest) {
-        return next(config('auth.redirect'))
+        return next(config.redirect)
       }
 
       // If not authenticated and not accessing the guest path, redirect to the guest path
-      if (!auth.authenticated() && to.path !== config('auth.guest')) {
-        return next(config('auth.guest'))
+      if (!auth.authenticated() && to.path !== config.guest) {
+        return next(config.guest)
       }
 
       // If the user does not have the given access permissions, throw an error
