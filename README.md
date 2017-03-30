@@ -7,6 +7,12 @@
 Dependency Container - Declare your dependencies for your application and let bottle.js manage your dependency tree.
 
 ``` javascript
+app.bind('api', function (container) {
+  return new Api(container.http, config)
+})
+```
+
+``` javascript
 app.make('events').fire('example.test', 'This is a test!')
 ```
 
@@ -17,6 +23,11 @@ auth.attempt('user@lantern.com', 'password')
 auth.allowed(user.scopes)
 ```
 
+``` html
+<button v-guard="['admin', 'submit_tickets']"></button>
+<button v-guard:deny="['trial']"></button>
+```
+
 Database & Search - Support for laravel, firebase and algolia out of the box.
 
 ``` javascript
@@ -24,12 +35,68 @@ search('examples/foo', 'tag')
 search.driver('algolia').searchIndex('examples_index', 'tag')
 ```
 
-Blueprint - Define your data models once, bootstrap your access to data with ease!
+Blueprint - Define your data model once, bootstrap your access to data with ease!
 
 ``` javascript
-model('example').driver('firebase').fetch(1)
-model('example').driver('laravel').delete(2)
-model('example').driver('algolia').create({ name: 'test', message: 'Hello world!'})
+export default {
+  name: 'example',
+  driver: 'laravel',
+  events: {...},
+  module: {...},
+  transformRequest () {...},
+  transformResponse () {...}
+}
+```
+
+``` javascript
+model('example').create({ name: 'test', message: 'Hello world!'})
+model('example').driver('algolia').all()
+```
+
+Vuex - Use vuex-bootstrappers to reduce the time it takes to setup your modules.
+
+``` javascript
+module: {
+  namespaced: true,
+  bootstrap: [ 'getters', 'mutations' ],
+  state: {
+    'name': '',
+    'message': ''
+  }
+}
+```
+
+Vue-Router - Write simple middleware to protect routes and reset data store.
+
+``` javascript
+export default {
+
+  /**
+   * Middlware before the user hits a route.
+   * @param  {Lantern} app  The application.
+   * @return {undefined}
+   */
+  handleBefore ({ auth }) {
+    return (to, from, next) => {
+      // If authenticated and accessing a guest only route, redirect to appropriate page
+      if (auth.authenticated() && to.meta && to.meta.guest) {
+        return next(config.redirect)
+      }
+
+      // If not authenticated and not accessing the guest path, redirect to the guest path
+      if (!auth.authenticated() && to.path !== config.guest) {
+        return next(config.guest)
+      }
+
+      // If the user does not have the given access permissions, throw an error
+      if (!auth.routeGuard(to)) {
+        return next(false)
+      }
+
+      return next()
+    }
+  }
+}
 ```
 
 ## Build Setup
