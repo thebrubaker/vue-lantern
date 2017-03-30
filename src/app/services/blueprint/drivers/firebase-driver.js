@@ -27,7 +27,10 @@ export default class FirebaseBlueprintDriver {
   fetch (key) {
     return new Promise((resolve, reject) => {
       this.firebase.database().ref(`${this.location}/${key}`).once('value').then(snapshot => {
-        resolve(snapshot.val())
+        resolve({
+          id: snapshot.key,
+          ...snapshot.val()
+        })
       }).catch(error => {
         reject(error)
       })
@@ -37,9 +40,22 @@ export default class FirebaseBlueprintDriver {
   /**
    * Create a new model in the database.
    * @param  {Object} data  The data to be saved.
-   * @return {undefined}
+   * @return {Promise} Resolves with the newly created resource
    */
   create (data) {
-    return this.firebase.database().ref(`${this.location}`).push(data)
+    return new Promise((resolve, reject) => {
+      this.firebase.database().ref(`${this.location}`).push(data).then(ref => {
+        ref.once('value').then(snapshot => {
+          resolve({
+            id: snapshot.key,
+            ...snapshot.val()
+          })
+        }).catch(error => {
+          reject(error)
+        })
+      }).catch(error => {
+        reject(error)
+      })
+    })
   }
 }

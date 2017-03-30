@@ -19,7 +19,6 @@ export default class AlgoliaBlueprintDriver {
     return new Promise((resolve, reject) => {
       this.algolia.initIndex(this.location).getObject(id, (errorMessage, data) => {
         if (errorMessage) {
-          error(errorMessage, 'AlgoliaBlueprintDriver')
           reject(errorMessage)
         } else {
           resolve(data)
@@ -34,6 +33,14 @@ export default class AlgoliaBlueprintDriver {
    * @return {undefined}
    */
   create (data) {
-    error('The create method is not yet implemented.', 'AlgoliaBlueprintDriver')
+    return new Promise((resolve, reject) => {
+      this.algolia.initIndex(this.location).addObject(data, null, (errorMessage, data) => {
+        if (errorMessage) {
+          reject(errorMessage)
+        } else {
+          resolve(data)
+        }
+      })
+    })
   }
 }
