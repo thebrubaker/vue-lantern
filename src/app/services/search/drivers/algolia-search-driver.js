@@ -1,5 +1,3 @@
-import algolia from 'algoliasearch'
-
 /**
  * An implementation of the Search service using Algolia. This service handles
  * sending requests to search indices and returning results.
@@ -12,11 +10,7 @@ export default class AlgoliaSearch {
    */
   constructor (config) {
     this.config = config
-    try {
-      this.algolia = algolia(config.drivers.algolia.id, config.drivers.algolia.key)
-    } catch (exception) {
-      error(exception.message, exception.name)
-    }
+    this.algolia = app.make('algolia')
   }
 
   /**

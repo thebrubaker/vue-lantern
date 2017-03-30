@@ -8,9 +8,9 @@ export default class LaravelSearch {
    * @param  {object} config The configuration for algolia.
    * @return {AlgoliaSearchService} The service.
    */
-  constructor (api, config) {
+  constructor (config) {
     this.config = config
-    this.api = api
+    this.api = app.make('api')
   }
 
   /**

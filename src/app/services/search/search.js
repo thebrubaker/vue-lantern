@@ -1,39 +1,48 @@
-import AlgoliaSearchDriver from './algolia-search-driver'
-import LaravelSearchDriver from './laravel-search-driver'
+import AlgoliaSearchDriver from './drivers/algolia-search-driver'
+import LaravelSearchDriver from './drivers/laravel-search-driver'
 
 export default class SearchService {
+
   /**
-   * Configure the algolia search service.
+   * Configure the search service.
    * @param  {object} config The configuration for algolia.
    * @return {AlgoliaSearchService} The service.
    */
-  constructor (container, config) {
+  constructor (config) {
+    this.config = config
     this.drivers = {
-      algolia: new AlgoliaSearchDriver(config),
-      laravel: new LaravelSearchDriver(container.api, config)
+      'algolia': new AlgoliaSearchDriver(config),
+      'laravel': new LaravelSearchDriver(config)
     }
-    switch (config.driver) {
-      case 'algolia':
-        this.selected_driver = this.drivers.algolia
-        break
-      case 'laravel':
-        this.selected_driver = this.drivers.laravel
-        break
-      default: error(`The driver you selected is not supported: ${config('search.driver')}`, 'Search')
+    this.driver = config.driver || 'no driver provided'
+  }
+
+  /**
+   * Change the driver for the search service.
+   * @param  {string} type  The type of driver.
+   * @return {AlgoliaSearchDriver|LaravelSearchDriver}  The selected driver.
+   */
+  get driver () {
+    return function (type) {
+      if (this.drivers[type] === undefined) {
+        return error(`The driver selected is not valid: '${type}'`, 'SearchService')
+      }
+
+      return this.drivers[type]
     }
   }
 
   /**
-   * Select a specific driver for performing search.
-   * @param  {string} name  The name of the driver
-   * @return {AlgoliaSearchDriver|LaravelSearchDriver}  The specified search driver.
+   * Set the selected driver from those that are available.
+   * @param  {string} type  The driver to select.
+   * @return {AlgoliaSearchDriver|LaravelSearchDriver}  The driver implementation.
    */
-  driver (name) {
-    if (this.drivers[name] === undefined) {
-      return error(`${name} is not a valid search driver. Perhaps you misspelled the driver?`, 'SearchService')
+  set driver (type) {
+    if (this.drivers[type] === undefined) {
+      return error(`The driver selected is not valid: '${type}'`, 'SearchService')
     }
 
-    return this.drivers[name]
+    this.selectedDriver = this.drivers[type]
   }
 
   /**
@@ -43,7 +52,7 @@ export default class SearchService {
    * @return {Promise} A promise that resolves with the response from Algolia.
    */
   search (query, config) {
-    return this.selected_driver.search(query, config)
+    return this.selectedDriver.search(query, config)
   }
 
   /**
@@ -54,7 +63,7 @@ export default class SearchService {
    * @return {Promise} A promise that resolves with the response from Algolia.
    */
   searchIndices (indices, query, params = {}) {
-    return this.selected_driver.searchIndices(indices, query, params)
+    return this.selectedDriver.searchIndices(indices, query, params)
   }
 
   /**
@@ -65,6 +74,6 @@ export default class SearchService {
    * @return {Promise} A promise that resolves with the response from Algolia.
    */
   searchIndex (index, query, params = {}) {
-    return this.selected_driver.searchIndex(index, query, params)
+    return this.selectedDriver.searchIndex(index, query, params)
   }
 }
