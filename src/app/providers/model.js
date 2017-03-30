@@ -8,7 +8,7 @@ import directory from 'utilities/directory'
  */
 function boot (app) {
   app.bind('model', function (container) {
-    let service = new ModelService(app, directory('models'))
+    let service = new ModelService(directory('src/models'))
 
     let model = namespace => service.load(namespace)
     model.all = service.all.bind(service)

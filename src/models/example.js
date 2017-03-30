@@ -4,7 +4,7 @@ export default {
    * The driver used to retrieve the model.
    * @type {String}
    */
-  driver: 'api',
+  driver: 'firebase',
 
   /**
    * The name of the model.
@@ -16,7 +16,7 @@ export default {
    * The location of the model.
    * @type {String}
    */
-  location: 'example',
+  location: 'examples',
 
   /**
    * If the driver supports loading relationships, define which
@@ -52,12 +52,21 @@ export default {
   events: {
 
     /**
+     * Fired when the model is fetched.
+     * @var {string}  message  The event name.
+     * @var {object}  data  The newly created product.
+     */
+    'fetched' (event, data) {
+      console.log(`[Event Fired: ${event}] ${this.name} was fetched.`, data)
+    },
+
+    /**
      * Fired when the model is created.
      * @var {string}  message  The event name.
      * @var {object}  data  The newly created product.
      */
     'created' (event, data) {
-      console.log(`${this.name} was created.`, data)
+      console.log(` [Event Fired: ${event}] ${this.name} was created.`, data)
     },
 
     /**
@@ -66,7 +75,7 @@ export default {
      * @var {object}  data  The updated product.
      */
     'updated' (event, data) {
-      console.log(`${this.name} was updated.`, data)
+      console.log(`[Event Fired: ${event}] ${this.name} was updated.`, data)
     },
 
     /**
@@ -75,7 +84,7 @@ export default {
      * @var {object}  data  The updated product.
      */
     'deleted' (event, id) {
-      console.log(`${this.name} was deleted.`, id)
+      console.log(`[Event Fired: ${event}] ${this.name} was deleted.`, id)
     }
   },
 
@@ -91,10 +100,10 @@ export default {
         validation: 'required|string',
         error: 'A name is required.'
       },
-      location: {
+      message: {
         default: '',
         validation: 'required|string',
-        error: 'A location is required.'
+        error: 'A message is required.'
       }
     }
   },
@@ -108,7 +117,7 @@ export default {
     bootstrap: [ 'getters', 'mutations' ],
     state: {
       'name': '',
-      'location': ''
+      'message': ''
     }
   }
 }

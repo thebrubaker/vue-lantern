@@ -4,12 +4,10 @@ export default class ModelService {
 
   /**
    * Construct the service.
-   * @param  {Lantern} app  The Lantern application.
    * @param  {Array} models  A list of models to be registered.
    * @return {ModelService}  The Model Service.
    */
-  constructor (app, models) {
-    this.app = app
+  constructor (models) {
     this.config = models
     this.blueprints = this.createBlueprints(models)
   }
@@ -49,7 +47,7 @@ export default class ModelService {
    */
   createBlueprints (models) {
     return Object.keys(models).reduce((carry, key) => {
-      carry[key] = new Blueprint({ namespace: key, ...models[key], app: this.app })
+      carry[key] = new Blueprint({ namespace: key, ...models[key] })
       return carry
     }, {})
   }
