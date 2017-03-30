@@ -1,7 +1,4 @@
 @import "normalize.css/normalize";
-@import "flexboxgrid/dist/flexboxgrid";
-@import 'variables';
-@import 'animations';
 
 * {
   box-sizing: border-box;
@@ -20,16 +17,5 @@ body {
 }
 
 html, body, .application {
-  min-height: 100%;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0,0,0,0);
-  border: 0;
+  height: 100%;
 }
