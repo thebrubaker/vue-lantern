@@ -4,6 +4,7 @@
  * @type {Array}
  */
 export default [
+  require('src/app/providers/algolia'),
   require('src/app/providers/api'),
   require('src/app/providers/auth'),
   require('src/app/providers/events'),
