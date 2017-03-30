@@ -37,6 +37,10 @@ export default class ModelService {
    * @return {Blueprint}  The requested model.
    */
   load (namespace) {
+    if (this.blueprints[namespace] === undefined) {
+      return error(`You are trying to access a model that does not exist: ${namespace}`, 'Model')
+    }
+
     return this.blueprints[namespace]
   }
 
