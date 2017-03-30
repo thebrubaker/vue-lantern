@@ -46,10 +46,23 @@ export default class Lantern {
   /**
    * Render the root view instance for the application.
    * @param  {VueComponent} rootViewInstance  The root Vue instance.
-   * @return {undefined}
+   * @return {Lantern} The application.
    */
   render (rootViewInstance) {
     this.view.init(rootViewInstance)
+
+    return this
+  }
+
+  /**
+   * Load modules into the data store.
+   * @param  {Object} modules  The modules.
+   * @return {Lantern} The application.
+   */
+  load (modules) {
+    this.store.init(modules)
+
+    return this
   }
 
   /**
