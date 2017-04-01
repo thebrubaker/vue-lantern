@@ -87,7 +87,7 @@ export default {
    * @type {Object}
    */
   form: {
-    namespace: 'message/form',
+    namespace: 'profile/form',
     fields: {
       first_name: {
         default: '',

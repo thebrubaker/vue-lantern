@@ -161,7 +161,6 @@ export default class Blueprint {
    */
   registerForm (form) {
     let module = { namespace: form.namespace, bootstrap: ['form'], form: form.fields }
-    console.log(module)
     try {
       this.createStoreModule(module)
     } catch (exception) {
