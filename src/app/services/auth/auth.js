@@ -45,6 +45,14 @@ export default class AuthService {
   }
 
   /**
+   * Return the auth token.
+   * @return {string}  The token.
+   */
+  token () {
+    return this.selectedDriver.token()
+  }
+
+  /**
    * Returns the user's authentication status.
    * @return {Boolean} Returns true if the user is authenticated, otherwise false.
    */
