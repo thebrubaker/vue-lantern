@@ -9,6 +9,7 @@ export default class ModelService {
    */
   constructor (models) {
     this.config = models
+    this.conflicts = {}
     this.blueprints = this.createBlueprints(models)
   }
 
@@ -51,9 +52,30 @@ export default class ModelService {
    */
   createBlueprints (models) {
     return Object.keys(models).reduce((carry, key) => {
+      if (this.hasConflict(models[key])) {
+        console.warn(models[key])
+        throw new Error('You are trying to register a model in the data store that conflicts with another model.')
+      }
       carry[key] = new Blueprint({ namespace: key, ...models[key] })
       return carry
     }, {})
+  }
+
+  /**
+   * Check if there is a conflict registering a module in the data store.
+   * @param  {Model}  model  The model to be checked.
+   * @return {Boolean} Returns true if there is a conflict.
+   */
+  hasConflict (model) {
+    if (this.conflicts[model.module.namespace]) {
+      return true
+    }
+    if (this.conflicts[model.form.namespace]) {
+      return true
+    }
+    this.conflicts[model.module.namespace] = true
+    this.conflicts[model.form.namespace] = true
+    return false
   }
 
   /**

@@ -4,19 +4,7 @@ export default {
    * The driver used to retrieve the model.
    * @type {String}
    */
-  driver: 'firebase',
-
-  /**
-   * The name of the model.
-   * @type {String}
-   */
-  name: 'example',
-
-  /**
-   * The location of the model.
-   * @type {String}
-   */
-  location: 'examples',
+  driver: 'laravel',
 
   /**
    * If the driver supports loading relationships, define which
@@ -24,7 +12,7 @@ export default {
    * @type {Array}
    */
   with: [
-    'children'
+    'inventory'
   ],
 
   /**
@@ -93,17 +81,17 @@ export default {
    * @type {Object}
    */
   form: {
-    namespace: 'example/form',
+    namespace: 'product/form',
     fields: {
       name: {
         default: '',
         validation: 'required|string',
         error: 'A name is required.'
       },
-      message: {
+      description: {
         default: '',
         validation: 'required|string',
-        error: 'A message is required.'
+        error: 'A description is required.'
       }
     }
   },
@@ -113,11 +101,11 @@ export default {
    * @type {Object}
    */
   module: {
-    namespace: 'example',
+    namespace: 'product',
     bootstrap: [ 'getters', 'mutations' ],
     state: {
       'name': '',
-      'message': ''
+      'description': ''
     }
   }
 }

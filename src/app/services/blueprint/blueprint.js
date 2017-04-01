@@ -75,13 +75,10 @@ export default class Blueprint {
    * @return {Promise}  A promise that resolves with the model.
    */
   fetch (id) {
-    return new Promise((resolve, reject) => {
-      this.selectedDriver.fetch(id).then(data => {
-        let result = this.model.transformResponse(data)
-        app.events.fire(`${this.name}.fetched`, result) && resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
+    return this.selectedDriver.fetch(id).then(data => {
+      let result = this.model.transformResponse(data)
+      app.events.fire(`${this.name}.fetched`, result)
+      Promise.resolve(result)
     })
   }
 
@@ -92,13 +89,10 @@ export default class Blueprint {
    */
   create (newData) {
     let payload = this.model.transformRequest(newData)
-    return new Promise((resolve, reject) => {
-      this.selectedDriver.create(payload).then(data => {
-        let result = this.model.transformResponse(data)
-        app.events.fire(`${this.name}.created`, result) && resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
+    this.selectedDriver.create(payload).then(data => {
+      let result = this.model.transformResponse(data)
+      app.events.fire(`${this.name}.created`, result)
+      Promise.resolve(result)
     })
   }
 
@@ -110,13 +104,10 @@ export default class Blueprint {
    */
   update (id, newData) {
     let payload = this.model.transformRequest(newData)
-    return new Promise((resolve, reject) => {
-      this.selectedDriver.update(id, payload).then(data => {
-        let result = this.model.transformResponse(data)
-        app.events.fire(`${this.name}.updated`, result) && resolve(result)
-      }).catch(error => {
-        reject(error)
-      })
+    this.selectedDriver.update(id, payload).then(data => {
+      let result = this.model.transformResponse(data)
+      app.events.fire(`${this.name}.updated`, result)
+      Promise.resolve(result)
     })
   }
 
@@ -126,12 +117,9 @@ export default class Blueprint {
    * @return {Promise}  A promise that resolves with true.
    */
   delete (id) {
-    return new Promise((resolve, reject) => {
-      this.selectedDriver.delete(id).then(() => {
-        app.events.fire(`${this.name}.deleted`, id) && resolve(true)
-      }).catch(error => {
-        reject(error)
-      })
+    this.selectedDriver.delete(id).then(() => {
+      app.events.fire(`${this.name}.deleted`, id)
+      Promise.resolve(true)
     })
   }
 
@@ -173,6 +161,7 @@ export default class Blueprint {
    */
   registerForm (form) {
     let module = { namespace: form.namespace, bootstrap: ['form'], form: form.fields }
+    console.log(module)
     try {
       this.createStoreModule(module)
     } catch (exception) {

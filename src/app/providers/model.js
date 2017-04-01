@@ -14,6 +14,7 @@ function boot (app) {
     model.all = service.all.bind(service)
     model.register = service.register.bind(service)
     model.boot = service.boot.bind(service)
+    model.self = service
 
     return model
   })
