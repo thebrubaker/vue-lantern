@@ -17,7 +17,6 @@ module.exports = {
   ],
   globals: {
     'app': true,
-    // 'config': true,
     'error': true,
     'env': true
   },
