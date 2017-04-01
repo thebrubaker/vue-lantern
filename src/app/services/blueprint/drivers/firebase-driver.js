@@ -6,8 +6,17 @@ export default class FirebaseBlueprintDriver {
    */
   constructor (blueprint) {
     this.blueprint = blueprint
-    this.location = blueprint.location
     this.firebase = app.make('firebase')
+  }
+
+  /**
+   * Set the model.
+   * @param  {[type]} model [description]
+   * @return {[type]}       [description]
+   */
+  set blueprint ({ model, location }) {
+    this.model = model
+    this.location = location
   }
 
   /**
