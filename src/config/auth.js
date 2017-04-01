@@ -8,7 +8,7 @@ export default {
   /**
    * Where to redirect an authorized user.
    */
-  'redirect': '/dashboard',
+  'redirect': '/home',
 
   /**
    * The namespace of the user object in the data store

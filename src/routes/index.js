@@ -1,17 +1,24 @@
 export default [
   {
     path: '/',
-    redirect: '/admin'
-  },
-  {
-    path: '/admin',
     component: require('layouts/admin'),
-    meta: {
-      auth: true
-    }
+    redirect: '/admin',
+    children: [
+      {
+        path: 'home',
+        component: require('pages/home'),
+        meta: {
+          auth: true
+        }
+      },
+      {
+        path: 'login',
+        component: require('pages/login')
+      }
+    ]
   },
   {
-    path: '/login',
-    component: require('layouts/login')
+    path: '*',
+    redirect: '/home'
   }
 ]
