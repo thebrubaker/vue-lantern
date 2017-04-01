@@ -1,6 +1,8 @@
 <template>
 <div class="admin-layout">
-  <router-view></router-view>
+  <transition name="page" mode="out-in">
+    <router-view></router-view>
+  </transition>
 </div>
 </template>
 
