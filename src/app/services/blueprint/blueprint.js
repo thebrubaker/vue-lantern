@@ -7,7 +7,8 @@ export default class Blueprint {
 
   /**
    * Constructor for the Blueprint model.
-   * @param  {object} options  The options for the blueprint.
+   * @param  {object} config  The config for the blueprint.
+   * @param  {object} driver  The driver for the blueprint.
    * @return {Blueprint}  The Blueprint model.
    */
   constructor (config, driver) {
@@ -76,7 +77,8 @@ export default class Blueprint {
   fetch (id) {
     return new Promise((resolve, reject) => {
       this.selectedDriver.fetch(id).then(data => {
-        app.events.fire(`${this.name}.fetched`, data) && resolve(data)
+        let result = this.model.transformResponse(data)
+        app.events.fire(`${this.name}.fetched`, result) && resolve(result)
       }).catch(error => {
         reject(error)
       })
@@ -85,13 +87,15 @@ export default class Blueprint {
 
   /**
    * Create a new model.
-   * @param  {object} data  The data to write.
+   * @param  {object} newData  The data to write.
    * @return {Promise}  A promise that resolves with the model.
    */
-  create (data) {
+  create (newData) {
+    let payload = this.model.transformRequest(newData)
     return new Promise((resolve, reject) => {
-      this.selectedDriver.create(data).then(data => {
-        app.events.fire(`${this.name}.created`, data) && resolve(data)
+      this.selectedDriver.create(payload).then(data => {
+        let result = this.model.transformResponse(data)
+        app.events.fire(`${this.name}.created`, result) && resolve(result)
       }).catch(error => {
         reject(error)
       })
@@ -101,13 +105,15 @@ export default class Blueprint {
   /**
    * Create a new model.
    * @param  {string} id  The model's id.
-   * @param  {object} data  The data to write.
+   * @param  {object} newData  The data to write.
    * @return {Promise}  A promise that resolves with the model.
    */
-  update (id, data) {
+  update (id, newData) {
+    let payload = this.model.transformRequest(newData)
     return new Promise((resolve, reject) => {
-      this.selectedDriver.update(id, data).then(data => {
-        app.events.fire(`${this.name}.updated`, data) && resolve(data)
+      this.selectedDriver.update(id, payload).then(data => {
+        let result = this.model.transformResponse(data)
+        app.events.fire(`${this.name}.updated`, result) && resolve(result)
       }).catch(error => {
         reject(error)
       })
@@ -121,8 +127,8 @@ export default class Blueprint {
    */
   delete (id) {
     return new Promise((resolve, reject) => {
-      this.selectedDriver.delete(id).then(data => {
-        app.events.fire(`${this.name}.deleted`, id) && resolve(data)
+      this.selectedDriver.delete(id).then(() => {
+        app.events.fire(`${this.name}.deleted`, id) && resolve(true)
       }).catch(error => {
         reject(error)
       })
