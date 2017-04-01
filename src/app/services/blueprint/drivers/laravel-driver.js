@@ -6,8 +6,28 @@ export default class AlgoliaBlueprintDriver {
    */
   constructor (blueprint) {
     this.blueprint = blueprint
-    this.location = blueprint.location
     this.api = app.make('api')
+  }
+
+  /**
+   * Set the model.
+   * @param  {[type]} model [description]
+   * @return {[type]}       [description]
+   */
+  set blueprint ({ model, location }) {
+    this.model = model
+    this.location = location
+  }
+
+  /**
+   * Get the parameters to be sent with the request.
+   * @return {object}  The params object.
+   */
+  get params () {
+    let params = {}
+    if (this.model.with) {
+      params.with = this.model.with.join(',')
+    }
   }
 
   /**
@@ -16,7 +36,9 @@ export default class AlgoliaBlueprintDriver {
    * @return {Object}  The model with the corresponding id.
    */
   fetch (id) {
-    return this.api.get(`${this.location}/${id}`)
+    return this.api.get(`${this.location}/${id}`, {
+      params: this.params
+    })
   }
 
   /**
