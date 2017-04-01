@@ -15,8 +15,8 @@
 export default {
   data () {
     return {
-      email: '',
-      password: '',
+      email: 'user@lantern.com',
+      password: 'password',
       error: null
     }
   },
