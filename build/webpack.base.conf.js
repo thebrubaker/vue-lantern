@@ -28,7 +28,7 @@ module.exports = {
       'bootstrap': resolve('src/bootstrap'),
       'drivers': resolve('src/app/drivers'),
       'components': resolve('src/components'),
-      'layouts': resolve('src/components/layouts'),
+      'layouts': resolve('src/layouts'),
       'pages': resolve('src/pages'),
       'services': resolve('src/app/services'),
       'src': resolve('src'),
