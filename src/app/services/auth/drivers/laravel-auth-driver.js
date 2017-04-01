@@ -96,7 +96,7 @@ export default class LaravelAuth {
    * @param  {string} credentials.password The password.
    * @return {Promise} Resolves with the authorized user.
    */
-  attempt ({ username, password }) {
+  attempt (username, password) {
     /**
      * Lets run a sequence of promises to
      * (1) Request and store the oauth token
@@ -146,7 +146,7 @@ export default class LaravelAuth {
    * @return {object} The payload for requesting an access token.
    */
   oauthPayload (credentials) {
-    return Object.assign(credentials, this.config.grant)
+    return Object.assign(credentials, this.connection)
   }
 
   /**
@@ -154,7 +154,7 @@ export default class LaravelAuth {
    * @return {object} The payload for refreshing an access token.
    */
   oauthRefreshPayload () {
-    return Object.assign(this.config.grant, {
+    return Object.assign(this.connection, {
       grant_type: 'refresh_token',
       refresh_token: this.store.get('auth/guard').refreshToken
     })
