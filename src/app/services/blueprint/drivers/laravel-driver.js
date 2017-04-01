@@ -28,6 +28,7 @@ export default class AlgoliaBlueprintDriver {
     if (this.model.with) {
       params.with = this.model.with.join(',')
     }
+    return params
   }
 
   /**
@@ -38,6 +39,8 @@ export default class AlgoliaBlueprintDriver {
   fetch (id) {
     return this.api.get(`${this.location}/${id}`, {
       params: this.params
+    }).then(response => {
+      return Promise.resolve(response.data)
     })
   }
 
@@ -47,7 +50,9 @@ export default class AlgoliaBlueprintDriver {
    * @return {undefined}
    */
   create (data) {
-    return this.api.post(this.location, data)
+    return this.api.post(this.location, data).then(response => {
+      return Promise.resolve(response.data)
+    })
   }
 
   /**
@@ -57,7 +62,9 @@ export default class AlgoliaBlueprintDriver {
    * @return {undefined}
    */
   update (id, data) {
-    return this.api.patch(`${this.location}/${id}`, data)
+    return this.api.patch(`${this.location}/${id}`, data).then(response => {
+      return Promise.resolve(response.data)
+    })
   }
 
   /**
@@ -66,6 +73,8 @@ export default class AlgoliaBlueprintDriver {
    * @return {undefined}
    */
   delete (id) {
-    return this.api.delete(`${this.location}/${id}`)
+    return this.api.delete(`${this.location}/${id}`).then(response => {
+      return Promise.resolve(response.data)
+    })
   }
 }
