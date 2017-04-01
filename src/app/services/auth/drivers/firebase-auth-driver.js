@@ -87,10 +87,11 @@ export default class FirebaseAuth {
   logout () {
     return new Promise((resolve, reject) => {
       this.firebase.auth().signOut().then(() => {
+        this.store.reset('auth/user/id').clearCache()
         this.store.reset('auth/user/name').clearCache()
         this.store.reset('auth/user/email').clearCache()
         this.store.reset('auth/guard/access_token').clearCache()
-        resolve()
+        resolve(true)
       }).catch(response => {
         error(response.message, 'FirebaseAuth')
         reject(response)
@@ -129,6 +130,7 @@ export default class FirebaseAuth {
 
     if (user === null) return error('Failed to get user after authentication attempt.', 'FirebaseAuth')
 
+    this.store.set('auth/user/id', user.uid).cache()
     this.store.set('auth/user/name', user.displayName).cache()
     this.store.set('auth/user/email', user.email).cache()
 

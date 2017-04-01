@@ -78,7 +78,7 @@ export default class Blueprint {
     return this.selectedDriver.fetch(id).then(data => {
       let result = this.model.transformResponse(data)
       app.events.fire(`${this.name}.fetched`, result)
-      Promise.resolve(result)
+      return Promise.resolve(result)
     })
   }
 
@@ -92,7 +92,7 @@ export default class Blueprint {
     this.selectedDriver.create(payload).then(data => {
       let result = this.model.transformResponse(data)
       app.events.fire(`${this.name}.created`, result)
-      Promise.resolve(result)
+      return Promise.resolve(result)
     })
   }
 
@@ -107,7 +107,7 @@ export default class Blueprint {
     this.selectedDriver.update(id, payload).then(data => {
       let result = this.model.transformResponse(data)
       app.events.fire(`${this.name}.updated`, result)
-      Promise.resolve(result)
+      return Promise.resolve(result)
     })
   }
 
@@ -119,7 +119,7 @@ export default class Blueprint {
   delete (id) {
     this.selectedDriver.delete(id).then(() => {
       app.events.fire(`${this.name}.deleted`, id)
-      Promise.resolve(true)
+      return Promise.resolve(true)
     })
   }
 

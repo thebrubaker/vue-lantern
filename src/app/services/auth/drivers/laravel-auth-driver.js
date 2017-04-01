@@ -83,11 +83,14 @@ export default class LaravelAuth {
 
   /**
    * Clear the data and cache for the user and the authentication guard.
-   * @return {undefined}
+   * @return {Promise}
    */
   logout () {
-    this.store.dispatch('auth/guard/reset')
-    this.store.dispatch('auth/user/reset')
+    this.store.reset('auth/user/id').clearCache()
+    this.store.reset('auth/user/name').clearCache()
+    this.store.reset('auth/user/email').clearCache()
+    this.store.reset('auth/guard/access_token').clearCache()
+    return Promise.resolve(true)
   }
 
   /**
@@ -118,6 +121,7 @@ export default class LaravelAuth {
       })
       // (3)
       .then(response => {
+        this.store.commit('auth/user/id', response.data.id).cache()
         this.store.commit('auth/user/first_name', response.data.first_name).cache()
         this.store.commit('auth/user/last_name', response.data.last_name).cache()
         this.store.commit('auth/user/email', response.data.email).cache()

@@ -14,6 +14,10 @@ export default [
       {
         path: 'login',
         component: require('pages/login')
+      },
+      {
+        path: 'playground',
+        component: require('pages/playground')
       }
     ]
   },

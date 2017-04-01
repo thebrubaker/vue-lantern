@@ -30,7 +30,7 @@ export default class FirebaseBlueprintDriver {
         if (!snapshot.val()) {
           reject(`${this.location}/${key} does not exist.`)
         }
-        resolve({ id: snapshot.key, ...snapshot.val() })
+        resolve(snapshot.val())
       })
     })
   }
