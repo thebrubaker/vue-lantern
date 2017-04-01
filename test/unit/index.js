@@ -2,13 +2,12 @@
 /* eslint-disable no-extend-native */
 Function.prototype.bind = require('function-bind')
 
+const providers = require('src/config/providers').default
+let app = require('app').boot(providers)
+
 // require all test files (files that ends with .spec.js)
 const testsContext = require.context('./specs', true, /\.spec$/)
 testsContext.keys().forEach(testsContext)
-
-const services = require('src/config/services').default
-
-let app = require('app').boot(services)
 
 // require all src files except main.js for coverage.
 // you can also change this to match only the subset of files that

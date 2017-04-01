@@ -1,3 +1,4 @@
+require('dotenv').config()
 var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
@@ -28,7 +29,6 @@ module.exports = {
       'drivers': resolve('src/app/drivers'),
       'components': resolve('src/components'),
       'layouts': resolve('src/components/layouts'),
-      // 'models': resolve('src/bootstrap/models'),
       'pages': resolve('src/pages'),
       'services': resolve('src/app/services'),
       'src': resolve('src'),
