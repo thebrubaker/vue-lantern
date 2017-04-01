@@ -4,7 +4,7 @@ export default {
    * Base URL for the API.
    * @type {string}
    */
-  'base_url': env('LARAVEL_BASE_URL', ''),
+  'baseURL': env('LARAVEL_BASE_URL', ''),
 
   /**
    * The authorization path for the API.
