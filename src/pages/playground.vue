@@ -29,8 +29,17 @@ export default {
   },
   created () {
     // fetches profiles ref with messages ref where the key matches.
-    app.model('profiles').with('messages').fetch(this.key).then(profile => {
-      this.profile = profile
+    // app.model('profiles').with('messages').fetch(this.key).then(profile => {
+    //   this.profile = profile.toJson(null, 2)
+    // })
+    app.model('profiles').create({
+      first_name: 'Art',
+      last_name: 'Longbottom'
+    }).then(profile => {
+      console.log(app.model('messages').belongsTo(profile))
+      app.model('messages').belongsTo(profile).push({
+        text: 'Foobarred!'
+      })
     })
   }
 }

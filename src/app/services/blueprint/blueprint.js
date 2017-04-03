@@ -11,14 +11,50 @@ export default class Blueprint {
    * @param  {object} driver  The driver for the blueprint.
    * @return {Blueprint}  The Blueprint model.
    */
-  constructor (config, driver) {
-    this.config = config
-    this.drivers = {
+  constructor (config, attributes = {}) {
+    this._config = this.configure(config)
+    this._attributes = attributes
+    this._drivers = {
       'firebase': new FirebaseDriver(this),
       'algolia': new AlgoliaDriver(this),
       'laravel': new LaravelDriver(this)
     }
-    this.driver = driver || config.driver || 'no driver provided'
+    this._driver = config.driver || 'no driver provided'
+  }
+
+  /**
+   * Create a relationship with a blueprint.
+   * @param  {Blueprint} blueprint  The blueprint.
+   * @return {Blueprint}  Return itself.
+   */
+  belongsTo (blueprint) {
+    this._selectedDriver.belongsTo(blueprint)
+
+    return this
+  }
+
+  /**
+   * When a blueprint is coerced into a string, return it's attributes.
+   * @return {object}  The attributes of the model.
+   */
+  toString () {
+    return this._attributes
+  }
+
+  /**
+   * Get the attributes for the blueprint.
+   * @return {object}  The attributes.
+   */
+  getAttributes () {
+    return this._attributes
+  }
+
+  /**
+   * Return the attributes as JSON
+   * @return {string}  The attributes as JSON
+   */
+  toJson (replacer, space) {
+    return JSON.stringify(this._attributes, replacer, space)
   }
 
   /**
@@ -26,20 +62,16 @@ export default class Blueprint {
    * @param  {Model} config  The model configuration for the blueprint.
    * @return {undefined}
    */
-  set config (config) {
-    this.model = config
-    this.namespace = config.namespace
-    this.relations = config.with || []
-    this.name = config.name || config.namespace.split('/').pop()
-    this.location = config.location || this.name
-  }
-
-  /**
-   * Return the configuration for the blueprint.
-   * @return {Object}  The model configuration.
-   */
-  get config () {
-    return this.model
+  configure (config) {
+    return {
+      name: config.name,
+      namespace: config.namespace,
+      location: config.location,
+      with: config.with,
+      id: config.id,
+      transformRequest: config.transformRequest,
+      transformResponse: config.transformResponse
+    }
   }
 
   /**
@@ -47,13 +79,13 @@ export default class Blueprint {
    * @param  {string} type  The type of driver.
    * @return {Blueprint}  A new instance of the current blueprint with the newly selected driver.
    */
-  get driver () {
+  get _driver () {
     return function (type) {
-      if (this.drivers[type] === undefined) {
+      if (this._drivers[type] === undefined) {
         return error(`The driver selected is not valid: '${type}'`, 'Blueprint')
       }
 
-      return new Blueprint(this.config, type)
+      return new Blueprint(this._config, type)
     }
   }
 
@@ -62,12 +94,21 @@ export default class Blueprint {
    * @param  {string} type  The driver to select.
    * @return {FirebaseDriver|AlgoliaDriver}  The driver implementation.
    */
-  set driver (type) {
-    if (this.drivers[type] === undefined) {
+  set _driver (type) {
+    if (this._drivers[type] === undefined) {
       return error(`The driver selected is not valid: '${type}'`, 'Blueprint')
     }
 
-    this.selectedDriver = this.drivers[type]
+    this._selectedDriver = this._drivers[type]
+  }
+
+  /**
+   * An alias for create
+   * @param  {object} data  The data to push
+   * @return {Promise}  A promise that resolves with the response
+   */
+  push (data) {
+    return this._selectedDriver.create(data)
   }
 
   /**
@@ -76,9 +117,20 @@ export default class Blueprint {
    * @return {Blueprint}  The blueprint.
    */
   with (relation) {
-    if (this.relations.indexOf(relation) === -1) {
-      this.relations.push(relation)
+    if (this._config.with.indexOf(relation) === -1) {
+      this._config.with.push(relation)
     }
+
+    return this
+  }
+
+  /**
+   * Fill the attributes of the blueprint.
+   * @param  {object} attributes  The attributes to fill.
+   * @return {Blueprint}  This blueprint.
+   */
+  fill (attributes) {
+    this._attributes = this._config.transformResponse(attributes)
 
     return this
   }
@@ -89,10 +141,10 @@ export default class Blueprint {
    * @return {Promise}  A promise that resolves with the model.
    */
   fetch (id) {
-    return this.selectedDriver.fetch(id).then(data => {
-      let result = this.model.transformResponse(data)
-      app.events.fire(`${this.name}.fetched`, result)
-      return Promise.resolve(result)
+    return this._selectedDriver.fetch(id).then(attributes => {
+      this.fill(attributes)
+      app.events.fire(`${this._config.name}.fetched`, this)
+      return Promise.resolve(this)
     })
   }
 
@@ -101,12 +153,13 @@ export default class Blueprint {
    * @param  {object} newData  The data to write.
    * @return {Promise}  A promise that resolves with the model.
    */
-  create (newData) {
-    let payload = this.model.transformRequest(newData)
-    this.selectedDriver.create(payload).then(data => {
-      let result = this.model.transformResponse(data)
-      app.events.fire(`${this.name}.created`, result)
-      return Promise.resolve(result)
+  create (data) {
+    let payload = this._config.transformRequest(data)
+    return this._selectedDriver.create(payload).then(({ key, attributes }) => {
+      this.key = key
+      this.fill(attributes)
+      app.events.fire(`${this._config.name}.created`, this)
+      return Promise.resolve(this)
     })
   }
 
@@ -116,12 +169,12 @@ export default class Blueprint {
    * @param  {object} newData  The data to write.
    * @return {Promise}  A promise that resolves with the model.
    */
-  update (id, newData) {
-    let payload = this.model.transformRequest(newData)
-    this.selectedDriver.update(id, payload).then(data => {
-      let result = this.model.transformResponse(data)
-      app.events.fire(`${this.name}.updated`, result)
-      return Promise.resolve(result)
+  update (id, data) {
+    let payload = this._config.transformRequest(data)
+    return this._selectedDriver.update(id, payload).then(attributes => {
+      this.fill(attributes)
+      app.events.fire(`${this._config.name}.updated`, this)
+      return Promise.resolve(this)
     })
   }
 
@@ -131,8 +184,8 @@ export default class Blueprint {
    * @return {Promise}  A promise that resolves with true.
    */
   delete (id) {
-    this.selectedDriver.delete(id).then(() => {
-      app.events.fire(`${this.name}.deleted`, id)
+    return this._selectedDriver.delete(id).then(() => {
+      app.events.fire(`${this._config.name}.deleted`, id)
       return Promise.resolve(true)
     })
   }
@@ -142,9 +195,9 @@ export default class Blueprint {
    * @return {undefined}
    */
   boot () {
-    if (this.config.events) this.registerEvents(this.config.events)
-    if (this.config.module) this.registerModule(this.config.module)
-    if (this.config.form) this.registerForm(this.config.form)
+    // if (this._config.events) this.registerEvents(this._config.events)
+    // if (this._config.module) this.registerModule(this._config.module)
+    // if (this._config.form) this.registerForm(this._config.form)
   }
 
   /**
@@ -152,7 +205,7 @@ export default class Blueprint {
    * @return {undefined}
    */
   registerEvents (events) {
-    app.events.registerChannel(namespaceKeys(this.name, events), this)
+    app.events.registerChannel(namespaceKeys(this._config.name, events), this)
   }
 
   /**
@@ -191,7 +244,7 @@ export default class Blueprint {
     module.namespaced = true
 
     if (module.namespace === undefined) {
-      module.namespace = this.namespace
+      module.namespace = this._config.namespace
     }
 
     if (module.namespace && Array.isArray(module.namespace)) {

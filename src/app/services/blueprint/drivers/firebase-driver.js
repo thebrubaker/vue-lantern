@@ -5,19 +5,9 @@ export default class FirebaseBlueprintDriver {
    * @return {FirebaseBlueprintDriver}  The driver.
    */
   constructor (blueprint) {
-    this.blueprint = blueprint
+    this.relations = blueprint._config.with
+    this.location = blueprint._config.location
     this.firebase = app.make('firebase')
-  }
-
-  /**
-   * Set the model.
-   * @param  {[type]} model [description]
-   * @return {[type]}       [description]
-   */
-  set blueprint ({ model, location }) {
-    this.model = model
-    this.relations = model.with || []
-    this.location = location
   }
 
   /**
@@ -66,7 +56,7 @@ export default class FirebaseBlueprintDriver {
    */
   mapRelations (results) {
     return this.relations.reduce((carry, relation, key) => {
-      carry[relation] = results[key + 1]
+      carry[relation] = results[key + 1].getAttributes()
       return carry
     }, results[0])
   }
@@ -95,12 +85,27 @@ export default class FirebaseBlueprintDriver {
   }
 
   /**
+   * Create a relationship with a blueprint.
+   * @param  {Blueprint} blueprint  The blueprint.
+   * @return {Blueprint}  Return itself.
+   */
+  belongsTo (blueprint) {
+    this.location = `${this.location}/${blueprint.key}`
+    this.ref().set(true)
+  }
+
+  /**
    * Create a new model in the database.
    * @param  {Object} data  The data to be saved.
    * @return {Promise} Resolves with the newly created resource
    */
   create (data) {
-    return this.ref().push(data).then(({ key }) => this.fetch(key))
+    return this.ref().push(data)
+    .then(({ key }) => {
+      return this.fetch(key).then(result => {
+        return Promise.resolve({ key, result })
+      })
+    })
   }
 
   /**

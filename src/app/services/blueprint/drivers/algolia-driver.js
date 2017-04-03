@@ -5,8 +5,8 @@ export default class AlgoliaBlueprintDriver {
    * @return {FirebaseBlueprintDriver}  The driver.
    */
   constructor (blueprint) {
-    this.blueprint = blueprint
-    this.location = blueprint.location
+    this.relations = blueprint._config.with
+    this.location = blueprint._config.location
     this.algolia = app.make('algolia')
   }
 

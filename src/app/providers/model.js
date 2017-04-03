@@ -1,5 +1,6 @@
 import ModelService from 'services/blueprint/model'
 import directory from 'utilities/directory'
+import config from 'src/config/model'
 
 /**
  * These services are booted during app initialization.
@@ -8,15 +9,9 @@ import directory from 'utilities/directory'
  */
 function boot (app) {
   app.bind('model', function (container) {
-    let service = new ModelService(directory('src/models'))
+    let model = new ModelService(directory('src/models'), config)
 
-    let model = namespace => service.load(namespace)
-    model.all = service.all.bind(service)
-    model.register = service.register.bind(service)
-    model.boot = service.boot.bind(service)
-    model.self = service
-
-    return model
+    return name => model.create(name)
   })
 }
 
@@ -27,7 +22,7 @@ function boot (app) {
  * @return {undefined}
  */
 function register (app) {
-  app.model.boot()
+  // app.model.boot()
 }
 
 export default { boot, register }

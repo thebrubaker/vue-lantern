@@ -5,18 +5,9 @@ export default class AlgoliaBlueprintDriver {
    * @return {FirebaseBlueprintDriver}  The driver.
    */
   constructor (blueprint) {
-    this.blueprint = blueprint
+    this.with = blueprint._config.with
+    this.location = blueprint._config.location
     this.api = app.make('api')
-  }
-
-  /**
-   * Set the model.
-   * @param  {[type]} model [description]
-   * @return {[type]}       [description]
-   */
-  set blueprint ({ model, location }) {
-    this.model = model
-    this.location = location
   }
 
   /**
@@ -25,8 +16,8 @@ export default class AlgoliaBlueprintDriver {
    */
   get params () {
     let params = {}
-    if (this.model.with) {
-      params.with = this.model.with.join(',')
+    if (this.with) {
+      params.with = this.with.join(',')
     }
     return params
   }
