@@ -28,6 +28,7 @@ export default {
 
   },
   created () {
+    // fetches profiles ref with messages ref where the key matches.
     app.model('profiles').with('messages').fetch(this.key).then(profile => {
       this.profile = profile
     })
