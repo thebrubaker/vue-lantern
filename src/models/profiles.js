@@ -7,18 +7,12 @@ export default {
   driver: 'firebase',
 
   /**
-   * The location of the model.
-   * @type {String}
-   */
-  location: 'profiles',
-
-  /**
    * If the driver supports loading relationships, define which
    * relationships you want loaded with the model.
    * @type {Array}
    */
   with: [
-    'messages'
+    // 'messages'
   ],
 
   /**
@@ -43,44 +37,44 @@ export default {
    * Register events for the model.
    * @type {Object}
    */
-  events: {
+  // events: {
 
-    /**
-     * Fired when the model is fetched.
-     * @var {string}  message  The event name.
-     * @var {object}  data  The newly created product.
-     */
-    'fetched' (event, data) {
-      console.log(`[Event Fired: ${event}] ${this.name} was fetched.`, data)
-    },
+  //   /**
+  //    * Fired when the model is fetched.
+  //    * @var {string}  message  The event name.
+  //    * @var {object}  data  The newly created product.
+  //    */
+  //   'fetched' (event, data) {
+  //     console.log(`[Event Fired: ${event}] ${this.name} was fetched.`, data)
+  //   },
 
-    /**
-     * Fired when the model is created.
-     * @var {string}  message  The event name.
-     * @var {object}  data  The newly created product.
-     */
-    'created' (event, data) {
-      console.log(` [Event Fired: ${event}] ${this.name} was created.`, data)
-    },
+  //   /**
+  //    * Fired when the model is created.
+  //    * @var {string}  message  The event name.
+  //    * @var {object}  data  The newly created product.
+  //    */
+  //   'created' (event, data) {
+  //     console.log(` [Event Fired: ${event}] ${this.name} was created.`, data)
+  //   },
 
-    /**
-     * Fired when the model is created.
-     * @var {string}  message  The event name.
-     * @var {object}  data  The updated product.
-     */
-    'updated' (event, data) {
-      console.log(`[Event Fired: ${event}] ${this.name} was updated.`, data)
-    },
+  //   /**
+  //    * Fired when the model is created.
+  //    * @var {string}  message  The event name.
+  //    * @var {object}  data  The updated product.
+  //    */
+  //   'updated' (event, data) {
+  //     console.log(`[Event Fired: ${event}] ${this.name} was updated.`, data)
+  //   },
 
-    /**
-     * Fired when the model is created.
-     * @var {string}  message  The event name.
-     * @var {object}  data  The updated product.
-     */
-    'deleted' (event, id) {
-      console.log(`[Event Fired: ${event}] ${this.name} was deleted.`, id)
-    }
-  },
+  //   /**
+  //    * Fired when the model is created.
+  //    * @var {string}  message  The event name.
+  //    * @var {object}  data  The updated product.
+  //    */
+  //   'deleted' (event, id) {
+  //     console.log(`[Event Fired: ${event}] ${this.name} was deleted.`, id)
+  //   }
+  // },
 
   /**
    * The configuration for creating a data store form module.

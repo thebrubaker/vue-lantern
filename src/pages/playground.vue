@@ -11,6 +11,7 @@
 export default {
   data () {
     return {
+      key: app.auth.user().id,
       profile: {}
     }
   },
@@ -27,20 +28,19 @@ export default {
 
   },
   created () {
-    const profile = app.model('profile')
-    const message = app.model('message')
-    const user = app.auth.user()
-    Promise.all([profile.fetch(user.id), message.fetch(user.id)]).then(results => {
-      console.log(results)
-      // let profile = results[0]
-      // let messages = results[1]
-      // profile.messages = messages
-      // this.profile = profile
+    app.model('profiles').with('messages').fetch(this.key).then(profile => {
+      this.profile = profile
     })
   }
 }
 </script>
 
 <style lang="scss" scoped>
-
+.playground {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 </style>

@@ -29,6 +29,7 @@ export default class Blueprint {
   set config (config) {
     this.model = config
     this.namespace = config.namespace
+    this.relations = config.with || []
     this.name = config.name || config.namespace.split('/').pop()
     this.location = config.location || this.name
   }
@@ -67,6 +68,19 @@ export default class Blueprint {
     }
 
     this.selectedDriver = this.drivers[type]
+  }
+
+  /**
+   * Push a relation onto the blueprint query.
+   * @param  {string} relation  The relation.
+   * @return {Blueprint}  The blueprint.
+   */
+  with (relation) {
+    if (this.relations.indexOf(relation) === -1) {
+      this.relations.push(relation)
+    }
+
+    return this
   }
 
   /**
