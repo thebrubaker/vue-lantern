@@ -22,7 +22,7 @@ export default {
    */
   transformResponse (data) {
     return data
-  },
+  }
 
   /**
    * Register events for the model.
@@ -71,26 +71,26 @@ export default {
    * The configuration for creating a data store form module.
    * @type {Object}
    */
-  form: {
-    namespace: 'message/form',
-    fields: {
-      text: {
-        default: '',
-        validation: 'required|string',
-        error: 'The text field is required.'
-      }
-    }
-  },
+  // form: {
+  //   namespace: 'message/form',
+  //   fields: {
+  //     text: {
+  //       default: '',
+  //       validation: 'required|string',
+  //       error: 'The text field is required.'
+  //     }
+  //   }
+  // },
 
   /**
    * The configuration for creating a data store module.
    * @type {Object}
    */
-  module: {
-    namespace: 'message',
-    bootstrap: [ 'getters', 'mutations' ],
-    state: {
-      'text': ''
-    }
-  }
+  // module: {
+  //   namespace: 'message',
+  //   bootstrap: [ 'getters', 'mutations' ],
+  //   state: {
+  //     'text': ''
+  //   }
+  // }
 }

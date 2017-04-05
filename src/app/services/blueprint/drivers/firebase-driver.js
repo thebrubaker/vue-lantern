@@ -5,8 +5,8 @@ export default class FirebaseBlueprintDriver {
    * @return {FirebaseBlueprintDriver}  The driver.
    */
   constructor (blueprint) {
-    this.relations = blueprint._config.with
-    this.location = blueprint._config.location
+    this.blueprint = blueprint
+    this.location = blueprint.config.location
     this.firebase = app.make('firebase')
   }
 
@@ -16,17 +16,6 @@ export default class FirebaseBlueprintDriver {
    * @return {Promise}  A promise that resolves with the model.
    */
   fetch (key) {
-    return this.relations.length
-      ? this.fetchWithRelations(key)
-      : this.fetchReference(key)
-  }
-
-  /**
-   * Fetch data from the database by key.
-   * @param  {string} key  The key of the model to be accessed.
-   * @return {Promise}  A promise that resolves with the model.
-   */
-  fetchReference (key) {
     return new Promise((resolve, reject) => {
       this.ref(key).once('value').then(snapshot => {
         if (!snapshot.val()) {
@@ -38,60 +27,41 @@ export default class FirebaseBlueprintDriver {
   }
 
   /**
-   * Fetch a model and any relations on that model
-   * @param  {string} key  The key to retrieve.
-   * @return {Promise}  A promise that resolves all requests.
-   */
-  fetchWithRelations (key) {
-    return Promise.all(this.fetchRelations(key)).then(results => {
-      return Promise.resolve(this.mapRelations(results))
-    })
-  }
-
-  /**
-   * Map the results of a request.
-   * @param  {array} results  An array where index[0] is the model result, and
-   * the remaining indices are the relationships.
-   * @return {Object}  The mapped results.
-   */
-  mapRelations (results) {
-    return this.relations.reduce((carry, relation, key) => {
-      carry[relation] = results[key + 1].getAttributes()
-      return carry
-    }, results[0])
-  }
-
-  /**
-   * Fetch the model and it's relations by a shared key
-   * @param  {string} key  The key shared by all models
-   * @return {array}  An array of promises.
-   */
-  fetchRelations (key) {
-    return this.relations.reduce((carry, relation) => {
-      carry.push(app.model(relation).fetch(key))
-      return carry
-    }, [this.fetchReference(key)])
-  }
-
-  /**
    * Return a reference to the give model or a key for the given model.
    * @param  {string} key  A child reference.
    * @return {Reference}  A firebase reference.
    */
-  ref (key) {
-    return key === undefined
+  ref (location) {
+    return location === undefined
       ? this.firebase.database().ref(this.location)
-      : this.firebase.database().ref(`${this.location}/${key}`)
+      : this.firebase.database().ref(`${this.location}/${location}`)
   }
 
   /**
-   * Create a relationship with a blueprint.
-   * @param  {Blueprint} blueprint  The blueprint.
-   * @return {Blueprint}  Return itself.
+   * Gets a Reference for the location at the specified relative path.
+   * @param  {[type]} path [description]
+   * @return {[type]}      [description]
    */
-  belongsTo (blueprint) {
-    this.location = `${this.location}/${blueprint.key}`
-    this.ref().set(true)
+  child (location) {
+    return this.ref().child(location)
+  }
+
+  /**
+   * Save a newly created key to it's parent relationship.
+   * @param  {string} key  The new key.
+   * @param  {Blueprint} parent  The parent blueprint.
+   * @return {Promise}  A promise that resolves when everything has been saved.
+   */
+  saveParentRelationship (key, parent) {
+    return Promise.all([
+      this.ref(key).child(parent.config.location).set(parent.id),
+      this.firebase.database()
+        .ref(parent.config.location)
+        .child(parent.id)
+        .child(this.location)
+        .child(key)
+        .set(true)
+    ])
   }
 
   /**
@@ -100,10 +70,11 @@ export default class FirebaseBlueprintDriver {
    * @return {Promise} Resolves with the newly created resource
    */
   create (data) {
-    return this.ref().push(data)
-    .then(({ key }) => {
-      return this.fetch(key).then(result => {
-        return Promise.resolve({ key, result })
+    let parent = this.blueprint.config.parent
+    return this.ref().push(data).then(({ key }) => {
+      this.saveParentRelationship(key, parent)
+      return this.fetch(key).then(attributes => {
+        return Promise.resolve({ id: key, attributes })
       })
     })
   }

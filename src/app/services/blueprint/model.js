@@ -25,6 +25,8 @@ export default class ModelService {
         namespace: models[key].namespace || key,
         location: models[key].location || key.split('/').pop(),
         with: models[key].with || [],
+        hasMany: models[key].hasMany || [],
+        belongsTo: models[key].belongsTo || [],
         id: models[key].id || null,
         attributes: models[key].attributes || {},
         transformRequest: models[key].transformRequest || function (data) { return data },

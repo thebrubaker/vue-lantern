@@ -2,7 +2,10 @@
   <div class="playground">
     <h1>Enjoy The Playground!</h1>
     <pre>
-      {{ profile }}
+      {{ user }}
+    </pre>
+    <pre>
+      {{ message }}
     </pre>
   </div>
 </template>
@@ -12,7 +15,8 @@ export default {
   data () {
     return {
       key: app.auth.user().id,
-      profile: {}
+      user: {},
+      message: {}
     }
   },
   components: {
@@ -28,17 +32,11 @@ export default {
 
   },
   created () {
-    // fetches profiles ref with messages ref where the key matches.
-    // app.model('profiles').with('messages').fetch(this.key).then(profile => {
-    //   this.profile = profile.toJson(null, 2)
-    // })
-    app.model('profiles').create({
-      first_name: 'Art',
-      last_name: 'Longbottom'
-    }).then(profile => {
-      console.log(app.model('messages').belongsTo(profile))
-      app.model('messages').belongsTo(profile).push({
-        text: 'Foobarred!'
+    app.model('users').fetch(3).then(user => {
+      this.user = user.data()
+      user.messages.create({ text: 'This is working!' }).then(message => {
+        console.log(message)
+        this.message = message.data()
       })
     })
   }

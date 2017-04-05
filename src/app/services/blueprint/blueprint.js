@@ -12,8 +12,12 @@ export default class Blueprint {
    * @return {Blueprint}  The Blueprint model.
    */
   constructor (config, attributes = {}) {
-    this._config = this.configure(config)
-    this._attributes = attributes
+    this.config = this.configure(config)
+    this.attributes = attributes
+    this.id = null
+    config.hasMany.forEach(relation => {
+      this[relation] = app.model(relation).belongsTo(this)
+    })
     this._drivers = {
       'firebase': new FirebaseDriver(this),
       'algolia': new AlgoliaDriver(this),
@@ -23,30 +27,22 @@ export default class Blueprint {
   }
 
   /**
-   * Create a relationship with a blueprint.
-   * @param  {Blueprint} blueprint  The blueprint.
-   * @return {Blueprint}  Return itself.
+   * Set that the model belongs to another model as a relationship.
+   * @param  {Blueprint} blueprint  The blueprint that is the parent.
+   * @return {Blueprint}  This blueprint.
    */
   belongsTo (blueprint) {
-    this._selectedDriver.belongsTo(blueprint)
+    this.config.parent = blueprint
 
     return this
-  }
-
-  /**
-   * When a blueprint is coerced into a string, return it's attributes.
-   * @return {object}  The attributes of the model.
-   */
-  toString () {
-    return this._attributes
   }
 
   /**
    * Get the attributes for the blueprint.
    * @return {object}  The attributes.
    */
-  getAttributes () {
-    return this._attributes
+  data () {
+    return this.attributes
   }
 
   /**
@@ -54,7 +50,7 @@ export default class Blueprint {
    * @return {string}  The attributes as JSON
    */
   toJson (replacer, space) {
-    return JSON.stringify(this._attributes, replacer, space)
+    return JSON.stringify(this.attributes, replacer, space)
   }
 
   /**
@@ -68,38 +64,12 @@ export default class Blueprint {
       namespace: config.namespace,
       location: config.location,
       with: config.with,
+      parent: null,
+      children: [],
       id: config.id,
       transformRequest: config.transformRequest,
       transformResponse: config.transformResponse
     }
-  }
-
-  /**
-   * Change the driver for the blueprint.
-   * @param  {string} type  The type of driver.
-   * @return {Blueprint}  A new instance of the current blueprint with the newly selected driver.
-   */
-  get _driver () {
-    return function (type) {
-      if (this._drivers[type] === undefined) {
-        return error(`The driver selected is not valid: '${type}'`, 'Blueprint')
-      }
-
-      return new Blueprint(this._config, type)
-    }
-  }
-
-  /**
-   * Set the selected driver from those that are available.
-   * @param  {string} type  The driver to select.
-   * @return {FirebaseDriver|AlgoliaDriver}  The driver implementation.
-   */
-  set _driver (type) {
-    if (this._drivers[type] === undefined) {
-      return error(`The driver selected is not valid: '${type}'`, 'Blueprint')
-    }
-
-    this._selectedDriver = this._drivers[type]
   }
 
   /**
@@ -117,8 +87,8 @@ export default class Blueprint {
    * @return {Blueprint}  The blueprint.
    */
   with (relation) {
-    if (this._config.with.indexOf(relation) === -1) {
-      this._config.with.push(relation)
+    if (this.config.with.indexOf(relation) === -1) {
+      this.config.with.push(relation)
     }
 
     return this
@@ -130,7 +100,7 @@ export default class Blueprint {
    * @return {Blueprint}  This blueprint.
    */
   fill (attributes) {
-    this._attributes = this._config.transformResponse(attributes)
+    this.attributes = this.config.transformResponse(attributes)
 
     return this
   }
@@ -142,8 +112,9 @@ export default class Blueprint {
    */
   fetch (id) {
     return this._selectedDriver.fetch(id).then(attributes => {
+      this.id = id
       this.fill(attributes)
-      app.events.fire(`${this._config.name}.fetched`, this)
+      app.events.fire(`${this.config.name}.fetched`, this)
       return Promise.resolve(this)
     })
   }
@@ -154,11 +125,11 @@ export default class Blueprint {
    * @return {Promise}  A promise that resolves with the model.
    */
   create (data) {
-    let payload = this._config.transformRequest(data)
-    return this._selectedDriver.create(payload).then(({ key, attributes }) => {
-      this.key = key
+    let payload = this.config.transformRequest(data)
+    return this._selectedDriver.create(payload).then(({ id, attributes }) => {
+      this.id = id
       this.fill(attributes)
-      app.events.fire(`${this._config.name}.created`, this)
+      app.events.fire(`${this.config.name}.created`, this)
       return Promise.resolve(this)
     })
   }
@@ -170,10 +141,11 @@ export default class Blueprint {
    * @return {Promise}  A promise that resolves with the model.
    */
   update (id, data) {
-    let payload = this._config.transformRequest(data)
+    let payload = this.config.transformRequest(data)
     return this._selectedDriver.update(id, payload).then(attributes => {
+      this.id = id
       this.fill(attributes)
-      app.events.fire(`${this._config.name}.updated`, this)
+      app.events.fire(`${this.config.name}.updated`, this)
       return Promise.resolve(this)
     })
   }
@@ -185,82 +157,45 @@ export default class Blueprint {
    */
   delete (id) {
     return this._selectedDriver.delete(id).then(() => {
-      app.events.fire(`${this._config.name}.deleted`, id)
+      this.id = id
+      app.events.fire(`${this.config.name}.deleted`, id)
       return Promise.resolve(true)
     })
   }
 
   /**
-   * Boot the blueprint into the application.
-   * @return {undefined}
+   * When a blueprint is coerced into a string, return it's attributes.
+   * @return {object}  The attributes of the model.
    */
-  boot () {
-    // if (this._config.events) this.registerEvents(this._config.events)
-    // if (this._config.module) this.registerModule(this._config.module)
-    // if (this._config.form) this.registerForm(this._config.form)
+  toString () {
+    return this.attributes
   }
 
   /**
-   * Register all events configured on the model.
-   * @return {undefined}
+   * Change the driver for the blueprint.
+   * @param  {string} type  The type of driver.
+   * @return {Blueprint}  A new instance of the current blueprint with the newly selected driver.
    */
-  registerEvents (events) {
-    app.events.registerChannel(namespaceKeys(this._config.name, events), this)
-  }
+  get _driver () {
+    return function (type) {
+      if (this._drivers[type] === undefined) {
+        return error(`The driver selected is not valid: '${type}'`, 'Blueprint')
+      }
 
-  /**
-   * Register a module with the data store service.
-   * @param  {Object} module  The configuration for the module.
-   * @return {undefined}
-   */
-  registerModule (module) {
-    try {
-      this.createStoreModule(module)
-    } catch (exception) {
-      this.throwNamespaceError(module, exception)
+      return new Blueprint(this.config, type)
     }
   }
 
   /**
-   * Register a module with the data store service.
-   * @param  {Object} module  The configuration for the module.
-   * @return {undefined}
+   * Set the selected driver from those that are available.
+   * @param  {string} type  The driver to select.
+   * @return {FirebaseDriver|AlgoliaDriver}  The driver implementation.
    */
-  registerForm (form) {
-    let module = { namespace: form.namespace, bootstrap: ['form'], form: form.fields }
-    try {
-      this.createStoreModule(module)
-    } catch (exception) {
-      this.throwNamespaceError(module, exception)
-    }
-  }
-
-  /**
-   * Create a module in the data store.
-   * @param  {Object} module  The configuration for the module.
-   * @return {undefined}
-   */
-  createStoreModule (module) {
-    module.namespaced = true
-
-    if (module.namespace === undefined) {
-      module.namespace = this._config.namespace
+  set _driver (type) {
+    if (this._drivers[type] === undefined) {
+      return error(`The driver selected is not valid: '${type}'`, 'Blueprint')
     }
 
-    if (module.namespace && Array.isArray(module.namespace)) {
-      return app.store.registerModule(module.namespace, module)
-    }
-
-    return app.store.registerModule(module.namespace.split('/'), module)
-  }
-
-  /**
-   * Throw an error if the user tries to register under a namespace that doesn't exist.
-   * @param  {string} exception  Stack trace exception.
-   * @return {undefined}
-   */
-  throwNamespaceError (module, exception) {
-    error(`You may be trying to register a model in the store under a module that does not exist: ${module.namespace}`, 'Blueprint')
-    throw new Error(exception)
+    this._selectedDriver = this._drivers[type]
   }
 }

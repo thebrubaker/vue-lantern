@@ -12,7 +12,15 @@ export default {
    * @type {Array}
    */
   with: [
-    // 'messages'
+    'messages'
+  ],
+
+  /**
+   * Set the relationship between this model and any children it owns.
+   * @type {Array}
+   */
+  hasMany: [
+    'messages'
   ],
 
   /**
@@ -31,7 +39,7 @@ export default {
    */
   transformResponse (data) {
     return data
-  },
+  }
 
   /**
    * Register events for the model.
@@ -80,32 +88,32 @@ export default {
    * The configuration for creating a data store form module.
    * @type {Object}
    */
-  form: {
-    namespace: 'profile/form',
-    fields: {
-      first_name: {
-        default: '',
-        validation: 'required|string',
-        error: 'The first name is required.'
-      },
-      last_name: {
-        default: '',
-        validation: 'required|string',
-        error: 'A last name is required.'
-      }
-    }
-  },
+  // form: {
+  //   namespace: 'profile/form',
+  //   fields: {
+  //     first_name: {
+  //       default: '',
+  //       validation: 'required|string',
+  //       error: 'The first name is required.'
+  //     },
+  //     last_name: {
+  //       default: '',
+  //       validation: 'required|string',
+  //       error: 'A last name is required.'
+  //     }
+  //   }
+  // },
 
   /**
    * The configuration for creating a data store module.
    * @type {Object}
    */
-  module: {
-    namespace: 'profile',
-    bootstrap: [ 'getters', 'mutations' ],
-    state: {
-      'first_name': '',
-      'last_name': ''
-    }
-  }
+  // module: {
+  //   namespace: 'profile',
+  //   bootstrap: [ 'getters', 'mutations' ],
+  //   state: {
+  //     'first_name': '',
+  //     'last_name': ''
+  //   }
+  // }
 }
