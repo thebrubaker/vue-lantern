@@ -31,19 +31,10 @@ export default class FirebaseBlueprintDriver {
    * @param  {string} key  A child reference.
    * @return {Reference}  A firebase reference.
    */
-  ref (location) {
-    return location === undefined
+  ref (key) {
+    return key === undefined
       ? this.firebase.database().ref(this.location)
-      : this.firebase.database().ref(`${this.location}/${location}`)
-  }
-
-  /**
-   * Gets a Reference for the location at the specified relative path.
-   * @param  {[type]} path [description]
-   * @return {[type]}      [description]
-   */
-  child (location) {
-    return this.ref().child(location)
+      : this.firebase.database().ref(this.location).child(key)
   }
 
   /**
@@ -72,7 +63,9 @@ export default class FirebaseBlueprintDriver {
   create (data) {
     let parent = this.blueprint.config.parent
     return this.ref().push(data).then(({ key }) => {
-      this.saveParentRelationship(key, parent)
+      if (parent) {
+        this.saveParentRelationship(key, parent)
+      }
       return this.fetch(key).then(attributes => {
         return Promise.resolve({ id: key, attributes })
       })
