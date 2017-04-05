@@ -1,8 +1,6 @@
 import Auth from 'services/auth/auth'
 import FirebaseDriver from 'services/auth/drivers/firebase-auth-driver'
 import LaravelDriver from 'services/auth/drivers/laravel-auth-driver'
-import oauthMiddleware from 'services/auth/middleware/oauth'
-import unauthorizedMiddleware from 'services/auth/middleware/unauthorized'
 import services from 'src/config/services'
 import config from 'src/config/auth'
 
@@ -30,8 +28,7 @@ function boot (app) {
  * @return {undefined}
  */
 function register (app) {
-  app.api.addRequestMiddleware(oauthMiddleware)
-  app.api.addRequestMiddleware(unauthorizedMiddleware)
+
 }
 
 export default { boot, register }
