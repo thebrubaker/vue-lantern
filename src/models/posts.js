@@ -7,24 +7,6 @@ export default {
   driver: 'firebase',
 
   /**
-   * If the driver supports loading relationships, define which
-   * relationships you want loaded with the model.
-   * @type {Array}
-   */
-  with: [
-    'messages'
-  ],
-
-  /**
-   * Set the relationship between this model and any children it owns.
-   * @type {Array}
-   */
-  hasMany: [
-    'messages',
-    'posts'
-  ],
-
-  /**
    * Transform the request before it is sent.
    * @param  {object} data
    * @return {object}
@@ -90,17 +72,12 @@ export default {
    * @type {Object}
    */
   // form: {
-  //   namespace: 'profile/form',
+  //   namespace: 'message/form',
   //   fields: {
-  //     first_name: {
+  //     text: {
   //       default: '',
   //       validation: 'required|string',
-  //       error: 'The first name is required.'
-  //     },
-  //     last_name: {
-  //       default: '',
-  //       validation: 'required|string',
-  //       error: 'A last name is required.'
+  //       error: 'The text field is required.'
   //     }
   //   }
   // },
@@ -110,11 +87,10 @@ export default {
    * @type {Object}
    */
   // module: {
-  //   namespace: 'profile',
+  //   namespace: 'message',
   //   bootstrap: [ 'getters', 'mutations' ],
   //   state: {
-  //     'first_name': '',
-  //     'last_name': ''
+  //     'text': ''
   //   }
   // }
 }

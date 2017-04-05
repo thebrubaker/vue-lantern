@@ -1,6 +1,7 @@
 <template>
   <div class="playground">
     <h1>Enjoy The Playground!</h1>
+    <button @click="create">Create</button>
     <pre>
       {{ user }}
     </pre>
@@ -29,16 +30,13 @@ export default {
 
   },
   methods: {
-
-  },
-  created () {
-    app.model('users').fetch(3).then(user => {
-      this.user = user.data()
-      user.messages.create({ text: 'This is working!' }).then(message => {
-        console.log(message)
-        this.message = message.data()
+    create () {
+      app.model('users').create({ name: 'Joel Brubaker' }).then(user => {
+        user.messages.create({ text: 'woo!' })
+        user.posts.create({ text: 'woo!' })
+        user.attach(message)
       })
-    })
+    }
   }
 }
 </script>
