@@ -1,4 +1,6 @@
 import Api from 'services/laravel/api'
+import tokenMiddleware from 'services/laravel/middleware/token'
+import unauthorizedMiddleware from 'services/laravel/middleware/unauthorized'
 import config from 'src/config/api'
 
 /**
@@ -19,7 +21,8 @@ function boot (app) {
  * @return {undefined}
  */
 function register (app) {
-
+  app.api.addRequestMiddleware(tokenMiddleware)
+  app.api.addRequestMiddleware(unauthorizedMiddleware)
 }
 
 export default { boot, register }
