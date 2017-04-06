@@ -12,7 +12,9 @@ export default {
    * @type {Array}
    */
   with: [
-    'messages'
+    'messages',
+    'groups',
+    'posts'
   ],
 
   /**

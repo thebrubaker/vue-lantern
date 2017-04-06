@@ -13,8 +13,8 @@ export default class Blueprint {
    */
   constructor (config, attributes = {}) {
     this.config = this.configure(config)
-    this.attributes = attributes
-    this.id = null
+    this.config.attributes = attributes
+    this.config.id = null
     config.hasMany.forEach(relation => {
       this[relation] = app.model(relation).belongsTo(this)
     })
@@ -24,6 +24,15 @@ export default class Blueprint {
       'laravel': new LaravelDriver(this)
     }
     this._driver = config.driver || 'no driver provided'
+  }
+
+  /**
+   * Link two blueprints together
+   * @param  {Blueprint} blueprint  The blueprint to link to.
+   * @return {Promise}  A promise that resolves with both blueprints.
+   */
+  link (blueprint) {
+    return this._selectedDriver.link(blueprint)
   }
 
   /**
@@ -42,7 +51,7 @@ export default class Blueprint {
    * @return {object}  The attributes.
    */
   data () {
-    return this.attributes
+    return this.config.attributes
   }
 
   /**
@@ -50,7 +59,7 @@ export default class Blueprint {
    * @return {string}  The attributes as JSON
    */
   toJson (replacer, space) {
-    return JSON.stringify(this.attributes, replacer, space)
+    return JSON.stringify(this.config.attributes, replacer, space)
   }
 
   /**
@@ -100,7 +109,7 @@ export default class Blueprint {
    * @return {Blueprint}  This blueprint.
    */
   fill (attributes) {
-    this.attributes = this.config.transformResponse(attributes)
+    this.config.attributes = this.config.transformResponse(attributes)
 
     return this
   }
@@ -112,7 +121,21 @@ export default class Blueprint {
    */
   fetch (id) {
     return this._selectedDriver.fetch(id).then(attributes => {
-      this.id = id
+      this.config.id = id
+      this.fill(attributes)
+      app.events.fire(`${this.config.name}.fetched`, this)
+      return Promise.resolve(this)
+    })
+  }
+
+  /**
+   * Fetch a specific model by it's id.
+   * @param  {string} id  The model's id.
+   * @return {Promise}  A promise that resolves with the model.
+   */
+  populate (id) {
+    return this._selectedDriver.populate(id).then(attributes => {
+      this.config.id = id
       this.fill(attributes)
       app.events.fire(`${this.config.name}.fetched`, this)
       return Promise.resolve(this)
@@ -127,7 +150,7 @@ export default class Blueprint {
   create (data) {
     let payload = this.config.transformRequest(data)
     return this._selectedDriver.create(payload).then(({ id, attributes }) => {
-      this.id = id
+      this.config.id = id
       this.fill(attributes)
       app.events.fire(`${this.config.name}.created`, this)
       return Promise.resolve(this)
@@ -143,7 +166,7 @@ export default class Blueprint {
   update (id, data) {
     let payload = this.config.transformRequest(data)
     return this._selectedDriver.update(id, payload).then(attributes => {
-      this.id = id
+      this.config.id = id
       this.fill(attributes)
       app.events.fire(`${this.config.name}.updated`, this)
       return Promise.resolve(this)
@@ -157,7 +180,7 @@ export default class Blueprint {
    */
   delete (id) {
     return this._selectedDriver.delete(id).then(() => {
-      this.id = id
+      this.config.id = id
       app.events.fire(`${this.config.name}.deleted`, id)
       return Promise.resolve(true)
     })
@@ -168,7 +191,7 @@ export default class Blueprint {
    * @return {object}  The attributes of the model.
    */
   toString () {
-    return this.attributes
+    return this.config.attributes
   }
 
   /**

@@ -2,6 +2,7 @@
   <div class="playground">
     <h1>Enjoy The Playground!</h1>
     <button @click="create">Create</button>
+    <button @click="fetch">Fetch User</button>
     <pre>
       {{ user }}
     </pre>
@@ -30,10 +31,19 @@ export default {
 
   },
   methods: {
+    fetch () {
+      app.model('users').populate('-Kh0hPKabfhLiBtwMtJN').then(user => {
+        user.messages.create({ text: 'This is another message!' })
+      })
+    },
     create () {
-      app.model('users').create({ name: 'Joel Brubaker' }).then(user => {
-        user.messages.create({ text: 'woo!' })
-        user.posts.create({ text: 'woo!' })
+      Promise.all([
+        app.model('users').create({ name: 'Joel Brubaker' }),
+        app.model('groups').create({ name: 'SD Techies' })
+      ]).then(([ user, group ]) => {
+        user.link(group)
+        user.messages.create({ text: 'This message woo!' })
+        user.posts.create({ text: 'This post woo!' })
       })
     }
   }

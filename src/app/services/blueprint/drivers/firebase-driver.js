@@ -6,8 +6,53 @@ export default class FirebaseBlueprintDriver {
    */
   constructor (blueprint) {
     this.blueprint = blueprint
-    this.location = blueprint.config.location
     this.firebase = app.make('firebase')
+  }
+
+  /**
+   * Get the ID from the blueprint.
+   * @return {string}  The id / key of the model.
+   */
+  get id () {
+    return this.blueprint.config.id
+  }
+
+  /**
+   * Get the location from the blueprint.
+   * @return {string}  The location.
+   */
+  get location () {
+    return this.blueprint.config.location
+  }
+
+  /**
+   * Get the location from the blueprint.
+   * @return {string}  The location.
+   */
+  get with () {
+    return this.blueprint.config.with
+  }
+
+  /**
+   * Link two blueprints together
+   * @param  {Blueprint} blueprint  The blueprint to link to.
+   * @return {Promise}  A promise that resolves with both blueprints.
+   */
+  link (blueprint) {
+    return Promise.all([
+      this.firebase.database()
+        .ref(blueprint.config.location)
+        .child(blueprint.config.id)
+        .child(this.location)
+        .child(this.id)
+        .set(true),
+      this.firebase.database()
+        .ref(this.location)
+        .child(this.id)
+        .child(blueprint.config.location)
+        .child(blueprint.config.id)
+        .set(true)
+    ])
   }
 
   /**
@@ -24,6 +69,37 @@ export default class FirebaseBlueprintDriver {
         resolve(snapshot.val())
       })
     })
+  }
+
+  populate (key) {
+    return this.fetch(key).then(model => {
+      let promises = this.with.reduce((carry, name) => {
+        carry.push(this.fetchRelation(model, name))
+        return carry
+      }, [])
+      return Promise.all(promises).then(results => {
+        this.with.forEach((name, key) => {
+          model[name] = results[key]
+        })
+        return Promise.resolve(model)
+      })
+    })
+  }
+
+  fetchRelation (model, name) {
+    if (typeof model[name] === 'string') {
+      return this.firebase.database().ref(name).child(model[name]).once('value').then(snapshot => {
+        return Promise.resolve(snapshot.val())
+      })
+    }
+    // messages.id, ... nth + 1
+    let promises = Object.keys(model[name]).reduce((carry, key) => {
+      carry.push(this.firebase.database().ref(name).child(key).once('value').then(snapshot => {
+        return Promise.resolve(snapshot.val())
+      }))
+      return carry
+    }, [])
+    return Promise.all(promises)
   }
 
   /**
@@ -45,10 +121,10 @@ export default class FirebaseBlueprintDriver {
    */
   saveParentRelationship (key, parent) {
     return Promise.all([
-      this.ref(key).child(parent.config.location).set(parent.id),
+      this.ref(key).child(parent.config.location).set(parent.config.id),
       this.firebase.database()
         .ref(parent.config.location)
-        .child(parent.id)
+        .child(parent.config.id)
         .child(this.location)
         .child(key)
         .set(true)
