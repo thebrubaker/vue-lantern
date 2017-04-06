@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     fetch () {
-      app.model('users').populate('-Kh0hPKabfhLiBtwMtJN').then(user => {
+      app.model('users').fetch('-Kh0hPKabfhLiBtwMtJN').then(user => {
         user.messages.create({ text: 'This is another message!' })
       })
     },
