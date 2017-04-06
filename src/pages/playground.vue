@@ -34,7 +34,6 @@ export default {
       app.model('users').create({ name: 'Joel Brubaker' }).then(user => {
         user.messages.create({ text: 'woo!' })
         user.posts.create({ text: 'woo!' })
-        user.attach(message)
       })
     }
   }
