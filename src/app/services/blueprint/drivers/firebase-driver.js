@@ -56,6 +56,24 @@ export default class FirebaseBlueprintDriver {
   }
 
   /**
+   * Save a newly created key to it's parent relationship.
+   * @param  {string} key  The new key.
+   * @param  {Blueprint} parent  The parent blueprint.
+   * @return {Promise}  A promise that resolves when everything has been saved.
+   */
+  saveParentRelationship (key, parent) {
+    return Promise.all([
+      this.ref(key).child(parent.config.location).set(parent.config.id),
+      this.firebase.database()
+        .ref(parent.config.location)
+        .child(parent.config.id)
+        .child(this.location)
+        .child(key)
+        .set(true)
+    ])
+  }
+
+  /**
    * Fetch data from the database by key.
    * @param  {string} key  The key of the model to be accessed.
    * @return {Promise}  A promise that resolves with the model.
@@ -66,6 +84,11 @@ export default class FirebaseBlueprintDriver {
       : this.once(key)
   }
 
+  /**
+   * Return the reference once.
+   * @param  {string} key  The key to return on this blueprint.
+   * @return {Promise}  Resolves with the model.
+   */
   once (key) {
     return new Promise((resolve, reject) => {
       this.ref(key).once('value').then(snapshot => {
@@ -77,6 +100,11 @@ export default class FirebaseBlueprintDriver {
     })
   }
 
+  /**
+   * Return the reference and populate it's children
+   * @param  {[type]} key [description]
+   * @return {[type]}     [description]
+   */
   populate (key) {
     return this.once(key).then(model => {
       let promises = this.with.map(name => this.fetchRelation(model, name))
@@ -89,6 +117,12 @@ export default class FirebaseBlueprintDriver {
     })
   }
 
+  /**
+   * Fetch a relation on a model by name
+   * @param  {object} model  The parent model.
+   * @param  {string} name  The name of the relation to fetch.
+   * @return {Promise}  A promise that resolves when all relations have been loaded.
+   */
   fetchRelation (model, name) {
     if (typeof model[name] === 'string') {  // user.messages = -K!123091ljnaskdjnadf
       return this.firebase.database().ref(name).child(model[name]).once('value').then(snapshot => {
@@ -112,24 +146,6 @@ export default class FirebaseBlueprintDriver {
     return key === undefined
       ? this.firebase.database().ref(this.location)
       : this.firebase.database().ref(this.location).child(key)
-  }
-
-  /**
-   * Save a newly created key to it's parent relationship.
-   * @param  {string} key  The new key.
-   * @param  {Blueprint} parent  The parent blueprint.
-   * @return {Promise}  A promise that resolves when everything has been saved.
-   */
-  saveParentRelationship (key, parent) {
-    return Promise.all([
-      this.ref(key).child(parent.config.location).set(parent.config.id),
-      this.firebase.database()
-        .ref(parent.config.location)
-        .child(parent.config.id)
-        .child(this.location)
-        .child(key)
-        .set(true)
-    ])
   }
 
   /**
