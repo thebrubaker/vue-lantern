@@ -1,8 +1,8 @@
 <template>
   <div class="playground">
     <h1>Enjoy The Playground!</h1>
-    <button @click="create">Create</button>
-    <button @click="fetch">Fetch</button>
+    <button @click="laravel">Laravel Test</button>
+    <button @click="firebase">Firebase Test</button>
     <pre style="width: 600px">
       {{ user }}
     </pre>
@@ -35,7 +35,7 @@ export default {
 
   },
   methods: {
-    fetch () {
+    laravel () {
       app.model('product').fetch(100).then(product => {
         product.category.create({
           name: 'Joels Collection!!!!!'
@@ -45,7 +45,7 @@ export default {
         })
       })
     },
-    create () {
+    firebase () {
       app.model('users').fetch('-Kh0hPKabfhLiBtwMtJN').then(user => {
         user.messages.create({
           text: 'This is a test!'

@@ -79,10 +79,7 @@ export default class FirebaseBlueprintDriver {
 
   populate (key) {
     return this.once(key).then(model => {
-      let promises = this.with.reduce((carry, name) => {
-        carry.push(this.fetchRelation(model, name))
-        return carry
-      }, [])
+      let promises = this.with.map(name => this.fetchRelation(model, name))
       return Promise.all(promises).then(results => {
         this.with.forEach((name, key) => {
           model[name] = results[key]
@@ -93,18 +90,16 @@ export default class FirebaseBlueprintDriver {
   }
 
   fetchRelation (model, name) {
-    if (typeof model[name] === 'string') {
+    if (typeof model[name] === 'string') {  // user.messages = -K!123091ljnaskdjnadf
       return this.firebase.database().ref(name).child(model[name]).once('value').then(snapshot => {
         return Promise.resolve(snapshot.val())
       })
     }
-    // messages.id, ... nth + 1
-    let promises = Object.keys(model[name]).reduce((carry, key) => {
-      carry.push(this.firebase.database().ref(name).child(key).once('value').then(snapshot => {
+    let promises = Object.keys(model[name]).map(key => {
+      return this.firebase.database().ref(name).child(key).once('value').then(snapshot => {
         return Promise.resolve(snapshot.val())
-      }))
-      return carry
-    }, [])
+      })
+    })
     return Promise.all(promises)
   }
 
