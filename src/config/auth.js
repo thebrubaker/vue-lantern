@@ -24,5 +24,5 @@ export default {
    * The driver used for authentication.
    * @type {String}
    */
-  driver: 'firebase'
+  driver: 'laravel'
 }

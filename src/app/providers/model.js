@@ -11,7 +11,7 @@ function boot (app) {
   app.bind('model', function (container) {
     let model = new ModelService(directory('src/models'), config)
 
-    return name => model.create(name)
+    return (name, loadRelations) => model.create(name, loadRelations)
   })
 }
 

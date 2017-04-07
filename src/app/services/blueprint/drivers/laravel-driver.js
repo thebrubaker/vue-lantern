@@ -1,12 +1,44 @@
 export default class AlgoliaBlueprintDriver {
   /**
-   * Construct the Firebase Blueprint driver.
-   * @param  {Blueprint} blueprint  The Blueprint model.
-   * @return {FirebaseBlueprintDriver}  The driver.
-   */
+  * Construct the Firebase Blueprint driver.
+  * @param  {Blueprint} blueprint  The Blueprint model.
+  * @return {FirebaseBlueprintDriver}  The driver.
+  */
   constructor (blueprint) {
-    this.location = blueprint.config.location
+    this.blueprint = blueprint
     this.api = app.make('api')
+  }
+
+  /**
+  * Get the ID from the blueprint.
+  * @return {string}  The id / key of the model.
+  */
+  get id () {
+    return this.blueprint.config.id
+  }
+
+  /**
+  * Get the parent from the blueprint.
+  * @return {string}  The id / key of the model.
+  */
+  get parent () {
+    return this.blueprint.config.parent
+  }
+
+  /**
+  * Get the location from the blueprint.
+  * @return {string}  The location.
+  */
+  get location () {
+    return this.blueprint.config.location
+  }
+
+  /**
+  * Get the location from the blueprint.
+  * @return {string}  The location.
+  */
+  get with () {
+    return this.blueprint.config.with
   }
 
   /**
@@ -40,7 +72,24 @@ export default class AlgoliaBlueprintDriver {
    * @return {undefined}
    */
   create (data) {
+    let parent = this.parent
     return this.api.post(this.location, data).then(response => {
+      if (parent) {
+        this.saveParentRelationship(response.data.id, parent)
+      }
+      return Promise.resolve({ id: response.data.id, attributes: response.data })
+    })
+  }
+
+  /**
+   * Save a parent relationship
+   * @param  {string} id  This model's id
+   * @param  {Blueprint} parent  The parent blueprint.
+   * @return {Promise}  A promise that resolves with the saved relationship
+   */
+  saveParentRelationship (id, parent) {
+    let path = [this.parent.config.location, this.parent.config.id, this.location, id].join('/')
+    return this.api.post(path).then(response => {
       return Promise.resolve(response.data)
     })
   }

@@ -2,7 +2,10 @@
 <div class="home-page">
   <h1>Vue Lantern [Alpha]</h1>
   <span>A project template for ambitious single-page applications.</span>
-  <button class="button" type="button" @click="logout">Logout</button>
+  <div class="buttons">
+    <button class="button logout" type="button" @click="logout">Logout</button>
+    <router-link to="/playground" class="button link" type="button">Playground</router-link>
+  </div>
 </div>
 </template>
 
@@ -39,6 +42,9 @@ export default {
   justify-content: center;
   align-items: center;
 }
+.buttons {
+  display: flex;
+}
 .button {
   margin-top: 10px;
   display: flex;
@@ -54,10 +60,19 @@ export default {
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
+  -webkit-appearance: initial;
 
   &:hover {
     background-color: rgba(0,0,0,0.08);
     cursor: pointer;
+  }
+
+  &.logout {
+    color: #d63c3c;
+  }
+
+  &.link {
+    color: #27a7ca;
   }
 }
 </style>

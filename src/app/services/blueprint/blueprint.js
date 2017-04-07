@@ -11,19 +11,24 @@ export default class Blueprint {
    * @param  {object} driver  The driver for the blueprint.
    * @return {Blueprint}  The Blueprint model.
    */
-  constructor (config, attributes = {}) {
+  constructor (config, relations = true) {
     this.config = this.configure(config)
-    this.config.attributes = attributes
-    this.config.id = null
-    config.hasMany.forEach(relation => {
-      this[relation] = app.model(relation).belongsTo(this)
-    })
+    if (relations) this.setRelations()
     this._drivers = {
       'firebase': new FirebaseDriver(this),
       'algolia': new AlgoliaDriver(this),
       'laravel': new LaravelDriver(this)
     }
     this._driver = config.driver || 'no driver provided'
+  }
+
+  /**
+   * Set the relations on a model.
+   */
+  setRelations () {
+    this.config.hasMany.forEach(relation => {
+      this[relation] = app.model(relation, false).belongsTo(this)
+    })
   }
 
   /**
@@ -71,8 +76,10 @@ export default class Blueprint {
     return {
       name: config.name,
       namespace: config.namespace,
+      driver: config.driver,
       location: config.location,
       with: config.with,
+      hasMany: config.hasMany,
       parent: null,
       children: [],
       id: config.id,
@@ -150,10 +157,11 @@ export default class Blueprint {
   create (data) {
     let payload = this.config.transformRequest(data)
     return this._selectedDriver.create(payload).then(({ id, attributes }) => {
-      this.config.id = id
-      this.fill(attributes)
-      app.events.fire(`${this.config.name}.created`, this)
-      return Promise.resolve(this)
+      let blueprint = new Blueprint(this.config)
+      blueprint.config.id = id
+      blueprint.fill(attributes)
+      app.events.fire(`${blueprint.config.name}.created`, blueprint)
+      return Promise.resolve(blueprint)
     })
   }
 
@@ -179,7 +187,7 @@ export default class Blueprint {
    * @return {Promise}  A promise that resolves with true.
    */
   delete (id) {
-    return this._selectedDriver.delete(id).then(() => {
+    return this._selectedDriver.delete(id || this.config.id).then(() => {
       this.config.id = id
       app.events.fire(`${this.config.name}.deleted`, id)
       return Promise.resolve(true)
@@ -205,7 +213,7 @@ export default class Blueprint {
         return error(`The driver selected is not valid: '${type}'`, 'Blueprint')
       }
 
-      return new Blueprint(this.config, type)
+      return new Blueprint(this.config)
     }
   }
 

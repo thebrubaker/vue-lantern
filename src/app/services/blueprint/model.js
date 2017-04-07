@@ -39,14 +39,15 @@ export default class ModelService {
   /**
    * Create a new Blueprint instance from a model.
    * @param  {string} name  The type of model to create.
+   * @param  {boolean} loadRelations  True if you want to load relations on the model.
    * @return {Blueprint}  The blueprint of that model.
    */
-  create (name) {
+  create (name, loadRelations) {
     if (this.models[name] === undefined) {
       throw new Error(`You are trying to create an invalid model: ${name}`)
     }
 
-    return new Blueprint(this.models[name])
+    return new Blueprint(this.models[name], loadRelations)
   }
 
   /**

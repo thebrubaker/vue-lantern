@@ -12,12 +12,11 @@ export default {
    * @type {Array}
    */
   with: [
-    'inventory'
+    'products'
   ],
 
   hasMany: [
-    'inventory',
-    'category'
+    'product'
   ],
 
   /**

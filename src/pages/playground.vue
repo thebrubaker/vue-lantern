@@ -2,12 +2,15 @@
   <div class="playground">
     <h1>Enjoy The Playground!</h1>
     <button @click="create">Create</button>
-    <button @click="fetch">Fetch User</button>
-    <pre>
+    <button @click="fetch">Fetch</button>
+    <pre style="width: 600px">
       {{ user }}
     </pre>
-    <pre>
+    <pre style="width: 600px">
       {{ message }}
+    </pre>
+    <pre style="width: 600px">
+      {{ product }}
     </pre>
   </div>
 </template>
@@ -18,7 +21,8 @@ export default {
     return {
       key: app.auth.user().id,
       user: {},
-      message: {}
+      message: {},
+      product: {}
     }
   },
   components: {
@@ -32,18 +36,20 @@ export default {
   },
   methods: {
     fetch () {
-      app.model('users').fetch('-Kh0hPKabfhLiBtwMtJN').then(user => {
-        user.messages.create({ text: 'This is another message!' })
+      app.model('product').fetch(100).then(product => {
+        product.category.create({
+          name: 'Joels Collection!!!!!'
+        }).then(category => {
+          console.log(category.products)
+          category.delete()
+        })
       })
     },
     create () {
-      Promise.all([
-        app.model('users').create({ name: 'Joel Brubaker' }),
-        app.model('groups').create({ name: 'SD Techies' })
-      ]).then(([ user, group ]) => {
-        user.link(group)
-        user.messages.create({ text: 'This message woo!' })
-        user.posts.create({ text: 'This post woo!' })
+      app.model('users').fetch('-Kh0hPKabfhLiBtwMtJN').then(user => {
+        user.messages.create({
+          text: 'This is a test!'
+        })
       })
     }
   }
