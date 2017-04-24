@@ -1,4 +1,3 @@
-require('dotenv').config()
 var path = require('path')
 var utils = require('./utils')
 var config = require('../config')
