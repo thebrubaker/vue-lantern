@@ -1,7 +1,9 @@
-let Lantern = require('src/app/Lantern').default
+let { App } = require('lantern-core')
 let config = require('src/config/app').default
 
-let app = new Lantern(config)
+let app = new App(config)
+
+if (Window && config.debug) Window.app = app
 
 module.exports = app
 

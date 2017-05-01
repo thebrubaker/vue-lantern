@@ -4,4 +4,4 @@ import providers from 'src/config/providers'
 import directory from 'utilities/directory'
 let modules = directory('store/modules')
 
-app.boot(providers).load(modules).render(view)
+app.boot(providers.map(provider => provider.default)).load(modules).render(view)

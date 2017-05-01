@@ -1,4 +1,6 @@
-import Store from 'services/vuex/store'
+import { Store } from 'lantern-core'
+import Vue from 'vue'
+import Vuex from 'vuex'
 import config from 'src/config/store'
 
 /**
@@ -8,7 +10,7 @@ import config from 'src/config/store'
  */
 function boot (app) {
   app.bind('store', function (container) {
-    return new Store(config)
+    return new Store(Vue, Vuex, config)
   })
 }
 

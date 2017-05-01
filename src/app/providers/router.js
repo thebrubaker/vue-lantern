@@ -1,7 +1,9 @@
-import Router from 'services/vue-router/router'
-import directory from 'utilities/directory'
-import config from 'src/config/router'
+import { Router } from 'lantern-core'
+import Vue from 'vue'
+import VueRouter from 'vue-router'
 import routes from 'routes'
+import config from 'src/config/router'
+import directory from 'utilities/directory'
 
 /**
  * These services are booted during app initialization.
@@ -10,7 +12,7 @@ import routes from 'routes'
  */
 function boot (app) {
   app.bind('router', function (container) {
-    return new Router(config, routes)
+    return new Router(Vue, VueRouter, routes, config)
   })
 }
 

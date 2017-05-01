@@ -1,4 +1,4 @@
-import ModelService from 'services/blueprint/model'
+import { Model } from 'lantern-core'
 import directory from 'utilities/directory'
 import config from 'src/config/model'
 
@@ -9,9 +9,19 @@ import config from 'src/config/model'
  */
 function boot (app) {
   app.bind('model', function (container) {
-    let model = new ModelService(directory('src/models'), config)
+    Model.Blueprint.FirebaseDriver.load(container.firebase)
+    Model.Blueprint.ApiDriver.load(container.api)
+    Model.Blueprint.AlgoliaDriver.load(container.algolia)
 
-    return (name, loadRelations) => model.create(name, loadRelations)
+    Model.Blueprint.load({
+      firebase: Model.Blueprint.FirebaseDriver,
+      api: Model.Blueprint.ApiDriver,
+      algolia: Model.Blueprint.AlgoliaDriver
+    })
+
+    let model = new Model(directory('src/models'), config)
+
+    return name => model.create(name)
   })
 }
 

@@ -1,6 +1,4 @@
-import Auth from 'services/auth/auth'
-import FirebaseDriver from 'services/auth/drivers/firebase-auth-driver'
-import LaravelDriver from 'services/auth/drivers/laravel-auth-driver'
+import { Auth } from 'lantern-core'
 import services from 'src/config/services'
 import config from 'src/config/auth'
 
@@ -10,14 +8,11 @@ import config from 'src/config/auth'
  * @return {undefined}
  */
 function boot (app) {
-  app.bind('firebase-auth-driver', function ({ firebase, store }) {
-    return new FirebaseDriver(firebase, store, config)
-  })
-  app.bind('laravel-auth-driver', function ({ api, store }) {
-    return new LaravelDriver(api, store, config, services.laravel)
-  })
-  app.bind('auth', function (container) {
-    return new Auth(config)
+  app.bind('auth', function ({ firebase, api, store }) {
+    return new Auth({
+      firebase: new Auth.FirebaseDriver(firebase, store, config),
+      api: new Auth.ApiDriver(api, store, config, services.laravel)
+    }, config)
   })
 }
 

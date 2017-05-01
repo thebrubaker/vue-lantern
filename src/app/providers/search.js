@@ -1,4 +1,4 @@
-import Search from 'services/search/search'
+import { Search } from 'lantern-core'
 import config from 'src/config/search'
 
 /**
@@ -8,7 +8,10 @@ import config from 'src/config/search'
  */
 function boot (app) {
   app.bind('search', function (container) {
-    let service = new Search(config)
+    let service = new Search({
+      algolia: new Search.AlgoliaDriver(container.algolia),
+      api: new Search.ApiDriver(container.api)
+    }, config)
 
     // Let's pull out the search function from the service, so it's easy to use for basic search queries,
     // but we'll also alias the more in-depth methods for complicated search queries.

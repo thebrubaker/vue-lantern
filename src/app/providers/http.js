@@ -1,4 +1,5 @@
-import Http from 'services/axios/http'
+import { Http } from 'lantern-core'
+import axios from 'axios'
 import config from 'src/config/http'
 
 /**
@@ -8,7 +9,7 @@ import config from 'src/config/http'
  */
 function boot (app) {
   app.bind('http', function (container) {
-    return new Http(config)
+    return new Http(axios, config)
   })
 }
 

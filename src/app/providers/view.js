@@ -1,4 +1,5 @@
-import View from 'services/vue/view'
+import { View } from 'lantern-core'
+import Vue from 'vue'
 import config from 'src/config/view'
 
 /**
@@ -8,7 +9,7 @@ import config from 'src/config/view'
  */
 function boot (app) {
   app.bind('view', function (container) {
-    return new View(container, config)
+    return new View(Vue, container.router, container.store, config)
   })
 }
 

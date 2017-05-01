@@ -1,4 +1,5 @@
-import Events from 'services/pubsub/events'
+import { Events } from 'lantern-core'
+import pubsub from 'pubsub-js'
 import directory from 'utilities/directory'
 import config from 'src/config/events'
 
@@ -9,7 +10,7 @@ import config from 'src/config/events'
  */
 function boot (app) {
   app.bind('events', function (container) {
-    return new Events(config)
+    return new Events(pubsub, config)
   })
 }
 

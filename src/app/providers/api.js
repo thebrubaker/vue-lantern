@@ -1,4 +1,4 @@
-import Api from 'services/laravel/api'
+import { Api } from 'lantern-core'
 import tokenMiddleware from 'services/laravel/middleware/token'
 import unauthorizedMiddleware from 'services/laravel/middleware/unauthorized'
 import config from 'src/config/api'

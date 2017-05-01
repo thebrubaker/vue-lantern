@@ -4,7 +4,7 @@ export default {
    * The driver used to retrieve the model.
    * @type {String}
    */
-  driver: 'laravel',
+  driver: 'api',
 
   /**
    * If the driver supports loading relationships, define which
